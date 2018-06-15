@@ -1,0 +1,83 @@
+21:42:34 **** Incremental Build of configuration Debug for project driver_alert_system_cortex_a9 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+In file included from ../src/main.c:63:0:
+../src/main.c: In function 'SendFrame':
+../src/main.c:378:47: error: 'FRAME_DATA_LENGTH' undeclared (first use in this function); did you mean 'FRAME_DATA_LENGTH_RX'?
+  TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)FRAME_DATA_LENGTH);
+                                               ^
+../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include/xcanps.h:491:5: note: in definition of macro 'XCanPs_CreateDlcValue'
+  (((DataLengCode) << XCANPS_DLCR_DLC_SHIFT) & XCANPS_DLCR_DLC_MASK)
+     ^~~~~~~~~~~~
+../src/main.c:378:47: note: each undeclared identifier is reported only once for each function it appears in
+  TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)FRAME_DATA_LENGTH);
+                                               ^
+../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include/xcanps.h:491:5: note: in definition of macro 'XCanPs_CreateDlcValue'
+  (((DataLengCode) << XCANPS_DLCR_DLC_SHIFT) & XCANPS_DLCR_DLC_MASK)
+     ^~~~~~~~~~~~
+../src/main.c: In function 'RecvHandler':
+../src/main.c:477:26: error: 'FRAME_DATA_LENGTH' undeclared (first use in this function); did you mean 'FRAME_DATA_LENGTH_RX'?
+  for (Index = 0; Index < FRAME_DATA_LENGTH; Index++) {
+                          ^~~~~~~~~~~~~~~~~
+                          FRAME_DATA_LENGTH_RX
+src/subdir.mk:27: recipe for target 'src/main.o' failed
+make: *** [src/main.o] Error 1
+21:42:50 **** Auto Build of configuration Debug for project driver_alert_system_cortex_a9 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+../src/main.c: In function 'SendFrame':
+../src/main.c:385:26: error: 'FRAME_DATA_LENGTH' undeclared (first use in this function); did you mean 'FRAME_DATA_LENGTH_RX'?
+  for (Index = 0; Index < FRAME_DATA_LENGTH; Index++) {
+                          ^~~~~~~~~~~~~~~~~
+                          FRAME_DATA_LENGTH_RX
+../src/main.c:385:26: note: each undeclared identifier is reported only once for each function it appears in
+../src/main.c: In function 'RecvHandler':
+../src/main.c:477:26: error: 'FRAME_DATA_LENGTH' undeclared (first use in this function); did you mean 'FRAME_DATA_LENGTH_RX'?
+  for (Index = 0; Index < FRAME_DATA_LENGTH; Index++) {
+                          ^~~~~~~~~~~~~~~~~
+                          FRAME_DATA_LENGTH_RX
+src/subdir.mk:27: recipe for target 'src/main.o' failed
+make: *** [src/main.o] Error 1
+21:43:06 **** Auto Build of configuration Debug for project driver_alert_system_cortex_a9 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+../src/main.c: In function 'RecvHandler':
+../src/main.c:477:26: error: 'FRAME_DATA_LENGTH' undeclared (first use in this function); did you mean 'FRAME_DATA_LENGTH_RX'?
+  for (Index = 0; Index < FRAME_DATA_LENGTH; Index++) {
+                          ^~~~~~~~~~~~~~~~~
+                          FRAME_DATA_LENGTH_RX
+../src/main.c:477:26: note: each undeclared identifier is reported only once for each function it appears in
+src/subdir.mk:27: recipe for target 'src/main.o' failed
+make: *** [src/main.o] Error 1
+21:47:30 **** Auto Build of configuration Debug for project driver_alert_system_cortex_a9 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building target: driver_alert_system_cortex_a9.elf
+Invoking: ARM v7 gcc linker
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/lib -o "driver_alert_system_cortex_a9.elf"  ./src/i2c.o ./src/main.o ./src/platform.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+Finished building target: driver_alert_system_cortex_a9.elf
+ 
+Invoking: ARM v7 Print Size
+arm-none-eabi-size driver_alert_system_cortex_a9.elf  |tee "driver_alert_system_cortex_a9.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+  39548	   2744	  22984	  65276	   fefc	driver_alert_system_cortex_a9.elf
+Finished building: driver_alert_system_cortex_a9.elf.size
+ 

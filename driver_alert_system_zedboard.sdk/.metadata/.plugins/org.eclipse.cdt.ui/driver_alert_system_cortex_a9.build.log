@@ -1,0 +1,23 @@
+21:47:30 **** Auto Build of configuration Debug for project driver_alert_system_cortex_a9 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+ 
+Building file: ../src/main.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building target: driver_alert_system_cortex_a9.elf
+Invoking: ARM v7 gcc linker
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/lib -o "driver_alert_system_cortex_a9.elf"  ./src/i2c.o ./src/main.o ./src/platform.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+Finished building target: driver_alert_system_cortex_a9.elf
+ 
+Invoking: ARM v7 Print Size
+arm-none-eabi-size driver_alert_system_cortex_a9.elf  |tee "driver_alert_system_cortex_a9.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+  39548	   2744	  22984	  65276	   fefc	driver_alert_system_cortex_a9.elf
+Finished building: driver_alert_system_cortex_a9.elf.size
+ 
+
+21:47:31 Build Finished (took 362ms)
+

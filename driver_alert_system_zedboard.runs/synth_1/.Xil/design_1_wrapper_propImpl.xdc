@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:/home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc rfile:../../../driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc rfile:../../../driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:10 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN L21 [get_ports CAN_0_0_rx]
 set_property src_info {type:XDC file:1 line:11 export:INPUT save:INPUT read:READ} [current_design]

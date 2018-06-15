@@ -22,24 +22,28 @@ set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
 set_msg_config -source 4 -id {IP_Flow 19-2162} -severity warning -new_severity info
-set_property webtalk.parent_dir /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/wt [current_project]
-set_property parent.project_path /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.xpr [current_project]
+set_property webtalk.parent_dir /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/wt [current_project]
+set_property parent.project_path /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.xpr [current_project]
 set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO XPM_MEMORY} [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language Verilog [current_project]
 set_property board_part em.avnet.com:zed:part0:1.4 [current_project]
+set_property ip_output_repo /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
-read_verilog -library xil_defaultlib /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/hdl/design_1_wrapper.v
-add_files /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/design_1.bd
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_board.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_1/design_1_rst_ps7_0_50M_1_board.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_1/design_1_rst_ps7_0_50M_1.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_1/design_1_rst_ps7_0_50M_1_ooc.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_auto_pc_0/design_1_auto_pc_0_ooc.xdc]
-set_property used_in_implementation false [get_files -all /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/design_1_ooc.xdc]
+read_verilog -library xil_defaultlib /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/hdl/design_1_wrapper.v
+add_files /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/design_1.bd
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_board.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_gpio_0_0/design_1_axi_gpio_0_0.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_1/design_1_rst_ps7_0_50M_1_board.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_1/design_1_rst_ps7_0_50M_1.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_rst_ps7_0_50M_1/design_1_rst_ps7_0_50M_1_ooc.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_timer_0_0/design_1_axi_timer_0_0.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_axi_timer_0_0/design_1_axi_timer_0_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_xbar_0/design_1_xbar_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/ip/design_1_auto_pc_0/design_1_auto_pc_0_ooc.xdc]
+set_property used_in_implementation false [get_files -all /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/design_1_ooc.xdc]
 
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -49,8 +53,8 @@ set_property used_in_implementation false [get_files -all /home/justin/driver_al
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc
-set_property used_in_implementation false [get_files /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc]
+read_xdc /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc
+set_property used_in_implementation false [get_files /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc]
 
 read_xdc dont_touch.xdc
 set_property used_in_implementation false [get_files dont_touch.xdc]

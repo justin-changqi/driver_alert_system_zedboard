@@ -27,7 +27,6 @@
 #define PLATFORM_ZYNQ
  
 /* Definitions for sleep timer configuration */
-#define XSLEEP_TIMER_IS_DEFAULT_TIMER
  
  
 /******************************************************************/
@@ -38,7 +37,7 @@
 #define XPAR_PS7_CAN_0_DEVICE_ID 0
 #define XPAR_PS7_CAN_0_BASEADDR 0xE0008000
 #define XPAR_PS7_CAN_0_HIGHADDR 0xE0008FFF
-#define XPAR_PS7_CAN_0_CAN_CLK_FREQ_HZ 100000000
+#define XPAR_PS7_CAN_0_CAN_CLK_FREQ_HZ 24000000
 
 
 /******************************************************************/
@@ -47,7 +46,7 @@
 #define XPAR_XCANPS_0_DEVICE_ID XPAR_PS7_CAN_0_DEVICE_ID
 #define XPAR_XCANPS_0_BASEADDR 0xE0008000
 #define XPAR_XCANPS_0_HIGHADDR 0xE0008FFF
-#define XPAR_XCANPS_0_CAN_CLK_FREQ_HZ 100000000
+#define XPAR_XCANPS_0_CAN_CLK_FREQ_HZ 24000000
 
 
 /******************************************************************/
@@ -243,6 +242,18 @@
 
 /******************************************************************/
 
+/* Definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_AXI_TIMER_0_INTERRUPT_INTR 61U
+#define XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR 62U
+
+/******************************************************************/
+
+/* Canonical definitions for Fabric interrupts connected to ps7_scugic_0 */
+#define XPAR_FABRIC_TMRCTR_0_VEC_ID XPAR_FABRIC_AXI_TIMER_0_INTERRUPT_INTR
+#define XPAR_FABRIC_GPIO_0_VEC_ID XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR
+
+/******************************************************************/
+
 /* Definitions for driver SCUGIC */
 #define XPAR_XSCUGIC_NUM_INSTANCES 1U
 
@@ -299,6 +310,26 @@
 #define XPAR_SCUWDT_0_BASEADDR 0xF8F00620
 #define XPAR_SCUWDT_0_HIGHADDR 0xF8F006FF
 
+
+/******************************************************************/
+
+/* Definitions for driver TMRCTR */
+#define XPAR_XTMRCTR_NUM_INSTANCES 1U
+
+/* Definitions for peripheral AXI_TIMER_0 */
+#define XPAR_AXI_TIMER_0_DEVICE_ID 0U
+#define XPAR_AXI_TIMER_0_BASEADDR 0x42800000U
+#define XPAR_AXI_TIMER_0_HIGHADDR 0x4280FFFFU
+#define XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ 50000000U
+
+
+/******************************************************************/
+
+/* Canonical definitions for peripheral AXI_TIMER_0 */
+#define XPAR_TMRCTR_0_DEVICE_ID 0U
+#define XPAR_TMRCTR_0_BASEADDR 0x42800000U
+#define XPAR_TMRCTR_0_HIGHADDR 0x4280FFFFU
+#define XPAR_TMRCTR_0_CLOCK_FREQ_HZ XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ
 
 /******************************************************************/
 

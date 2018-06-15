@@ -91,8 +91,8 @@
 /* Maximum CAN frame length in word */
 #define XCANPS_MAX_FRAME_SIZE_IN_WORDS (XCANPS_MAX_FRAME_SIZE / sizeof(u32))
 
-#define FRAME_DATA_LENGTH	8 /* Frame Data field length */
-
+#define FRAME_DATA_LENGTH_TX	1 /* Frame Data field length */
+#define FRAME_DATA_LENGTH_RX	8
 /*
  * Message Id Constant.
  */
@@ -182,9 +182,10 @@ volatile static int SendDone;		/* Frame was sent successfully */
 * @note		None.
 *
 *****************************************************************************/
-#define TESTAPP_GEN
+#define TESTAPP_GEN_
+
 #ifndef TESTAPP_GEN
-int main_()
+int main()
 {
 	int Status;
 
@@ -294,8 +295,8 @@ int CanPsIntrExample(INTC *IntcInstPtr, XCanPs *CanInstPtr,
 	/*
 	 * Enter Loop Back Mode.
 	 */
-	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_LOOPBACK);
-	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_LOOPBACK);
+	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_NORMAL);
+	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_NORMAL);
 
 	/*
 	 * Loop back a frame. The RecvHandler is expected to handle
@@ -374,15 +375,15 @@ static void SendFrame(XCanPs *InstancePtr)
 	 * Create correct values for Identifier and Data Length Code Register.
 	 */
 	TxFrame[0] = (u32)XCanPs_CreateIdValue((u32)TEST_MESSAGE_ID, 0, 0, 0, 0);
-	TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)FRAME_DATA_LENGTH);
+	TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)FRAME_DATA_LENGTH_TX);
 
 	/*
 	 * Now fill in the data field with known values so we can verify them
 	 * on receive.
 	 */
 	FramePtr = (u8 *)(&TxFrame[2]);
-	for (Index = 0; Index < FRAME_DATA_LENGTH; Index++) {
-		*FramePtr++ = (u8)Index;
+	for (Index = 0; Index < FRAME_DATA_LENGTH_TX; Index++) {
+		*FramePtr++ = (u8)0x00;
 	}
 
 	/*
@@ -473,7 +474,7 @@ static void RecvHandler(void *CallBackRef)
 	 * Verify the Data field contents.
 	 */
 	FramePtr = (u8 *)(&RxFrame[2]);
-	for (Index = 0; Index < FRAME_DATA_LENGTH; Index++) {
+	for (Index = 0; Index < FRAME_DATA_LENGTH_RX; Index++) {
 		if (*FramePtr++ != (u8)Index) {
 			LoopbackError = TRUE;
 			break;

@@ -69,17 +69,17 @@ set rc [catch {
   set_property board_part em.avnet.com:zed:part0:1.4 [current_project]
   set_property design_mode GateLvl [current_fileset]
   set_param project.singleFileAddWarning.threshold 0
-  set_property webtalk.parent_dir /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/wt [current_project]
-  set_property parent.project_path /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.xpr [current_project]
-  set_property ip_output_repo /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/ip [current_project]
+  set_property webtalk.parent_dir /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/wt [current_project]
+  set_property parent.project_path /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.xpr [current_project]
+  set_property ip_output_repo /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
   set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO XPM_MEMORY} [current_project]
-  add_files -quiet /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.runs/synth_1/design_1_wrapper.dcp
+  add_files -quiet /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.runs/synth_1/design_1_wrapper.dcp
   set_msg_config -source 4 -id {BD 41-1661} -limit 0
   set_param project.isImplRun true
-  add_files /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/design_1.bd
+  add_files /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/sources_1/bd/design_1/design_1.bd
   set_param project.isImplRun false
-  read_xdc /home/justin/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc
+  read_xdc /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.srcs/constrs_1/new/IO_Port.xdc
   set_param project.isImplRun true
   link_design -top design_1_wrapper -part xc7z020clg484-1
   set_param project.isImplRun false
