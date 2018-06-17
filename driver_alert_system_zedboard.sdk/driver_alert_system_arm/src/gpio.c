@@ -7,7 +7,7 @@ int Gpio_init()
 	 INTC *IntcInstancePtr = &INTCInst;
 	 XGpio *InstancePtr = &BTNInst;
 	 u16 DeviceId = BUTTON_DEVICE_ID;
-	 u16 IntrId = INTC_GPIO_INTERRIPT_ID;
+	 u16 IntrId = INTC_GPIO_INTERRUPT_ID;
 	 u16 IntrMask = GPIO_CHANNEL_1_INT_MASK;
 
 	int Status;
