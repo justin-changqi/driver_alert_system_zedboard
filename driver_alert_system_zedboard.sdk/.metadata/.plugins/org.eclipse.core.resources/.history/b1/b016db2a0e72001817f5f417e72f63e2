@@ -1,0 +1,13 @@
+/*
+ * main.c
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#ifdef TEST
+int main()
+{
+	return 0;
+}
+#endif

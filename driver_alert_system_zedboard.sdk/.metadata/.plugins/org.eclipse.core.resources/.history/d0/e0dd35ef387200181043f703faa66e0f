@@ -1,0 +1,21 @@
+/*
+ * main.c
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#include "gpio.h"
+#include "i2c.h"
+#include "can.h"
+
+#define TEST
+
+#ifdef TEST
+int main()
+{
+	printf("start initial\n");
+	Gpio_init();
+	return 0;
+}
+#endif

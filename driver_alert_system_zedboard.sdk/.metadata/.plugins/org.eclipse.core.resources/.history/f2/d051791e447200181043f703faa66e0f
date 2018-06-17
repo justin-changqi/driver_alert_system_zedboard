@@ -1,0 +1,30 @@
+/*
+ * main.c
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#include "gpio.h"
+//#include "i2c.h"
+//#include "can.h"
+
+#define TEST
+
+#ifdef TEST
+int main()
+{
+	int status;
+	init_platform();
+	printf("start initial\n");
+	status = Gpio_init();
+	if (status != XST_SUCCESS) {
+		printf("Failed to initial \n");
+
+	}
+	printf("Initial \n");
+	while(1){};
+	printf("Exit\n");
+	return 0;
+}
+#endif

@@ -7,16 +7,25 @@ LD_SRCS += \
 ../src/lscript.ld 
 
 C_SRCS += \
+../src/can.c \
+../src/common.c \
+../src/gpio.c \
 ../src/i2c.c \
 ../src/main.c \
 ../src/platform.c 
 
 OBJS += \
+./src/can.o \
+./src/common.o \
+./src/gpio.o \
 ./src/i2c.o \
 ./src/main.o \
 ./src/platform.o 
 
 C_DEPS += \
+./src/can.d \
+./src/common.d \
+./src/gpio.d \
 ./src/i2c.d \
 ./src/main.d \
 ./src/platform.d 

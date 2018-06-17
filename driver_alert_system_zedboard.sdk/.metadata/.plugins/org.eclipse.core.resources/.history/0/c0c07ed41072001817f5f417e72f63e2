@@ -1,0 +1,26 @@
+/*
+ * gpio.h
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#ifndef SRC_GPIO_H_
+#define SRC_GPIO_H_
+
+#include "xparameters.h"
+#include "xgpio.h"
+#include "xil_exception.h"
+
+#ifdef XPAR_INTC_0_DEVICE_ID
+ #include "xintc.h"
+ #include <stdio.h>
+#else
+ #include "xscugic.h"
+ #include "xil_printf.h"
+#endif
+
+#define GPIO_DEVICE_ID		XPAR_GPIO_0_DEVICE_ID
+#define GPIO_CHANNEL_SW		1
+
+#endif /* SRC_GPIO_H_ */

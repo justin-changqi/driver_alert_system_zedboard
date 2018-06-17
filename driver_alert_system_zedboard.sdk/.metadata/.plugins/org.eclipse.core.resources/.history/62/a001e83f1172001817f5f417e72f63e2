@@ -1,0 +1,39 @@
+/*
+ * gpio.h
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#ifndef SRC_GPIO_H_
+#define SRC_GPIO_H_
+
+#include "xparameters.h"
+#include "xgpio.h"
+#include "xil_exception.h"
+
+#ifdef XPAR_INTC_0_DEVICE_ID
+ #include "xintc.h"
+ #include <stdio.h>
+#else
+ #include "xscugic.h"
+ #include "xil_printf.h"
+#endif
+
+#define GPIO_DEVICE_ID		XPAR_GPIO_0_DEVICE_ID
+#define GPIO_CHANNEL_SW		1
+#define GPIO_CHANNEL_OUTPUT		2
+
+#ifdef XPAR_INTC_0_DEVICE_ID
+ #define INTC_GPIO_INTERRUPT_ID	XPAR_INTC_0_GPIO_0_VEC_ID
+ #define INTC_DEVICE_ID	XPAR_INTC_0_DEVICE_ID
+#else
+ #define INTC_GPIO_INTERRUPT_ID	XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR
+ #define INTC_DEVICE_ID	XPAR_SCUGIC_SINGLE_DEVICE_ID
+#endif /* XPAR_INTC_0_DEVICE_ID */
+
+#define GPIO_LEDS		0x0003
+#define GPIO_ALL_BUTTONS	0xFFFF
+
+
+#endif /* SRC_GPIO_H_ */

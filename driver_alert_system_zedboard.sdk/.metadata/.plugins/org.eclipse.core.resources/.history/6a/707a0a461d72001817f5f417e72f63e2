@@ -1,0 +1,147 @@
+#include "gpio.h"
+
+
+#define TESTAPP_GEN
+#ifndef TESTAPP_GEN
+int main(void)
+{
+	int Status;
+	u32 DataRead;
+
+	  print(" Press button to Generate Interrupt\r\n");
+
+	  Status = GpioIntrExample(&Intc, &Gpio,
+				   GPIO_DEVICE_ID,
+				   INTC_GPIO_INTERRUPT_ID,
+				   GPIO_CHANNEL1, &DataRead);
+
+	if (Status == 0 ){
+		if(DataRead == 0)
+			print("No button pressed. \r\n");
+		else
+			print("Successfully ran Gpio Interrupt Tapp Example\r\n");
+	} else {
+		 print("Gpio Interrupt Tapp Example Failed.\r\n");
+		 return XST_FAILURE;
+	}
+
+	return XST_SUCCESS;
+}
+#endif
+
+/******************************************************************************/
+/**
+*
+* This is the entry function from the TestAppGen tool generated application
+* which tests the interrupts when enabled in the GPIO
+*
+* @param	IntcInstancePtr is a reference to the Interrupt Controller
+*		driver Instance
+* @param	InstancePtr is a reference to the GPIO driver Instance
+* @param	DeviceId is the XPAR_<GPIO_instance>_DEVICE_ID value from
+*		xparameters.h
+* @param	IntrId is XPAR_<INTC_instance>_<GPIO_instance>_IP2INTC_IRPT_INTR
+*		value from xparameters.h
+* @param	IntrMask is the GPIO channel mask
+* @param	DataRead is the pointer where the data read from GPIO Input is
+*		returned
+*
+* @return
+*		- XST_SUCCESS if the Test is successful
+*		- XST_FAILURE if the test is not successful
+*
+* @note		None.
+*
+******************************************************************************/
+int Gpio_init(INTC *IntcInstancePtr, XGpio *InstancePtr,
+			  u16 DeviceId, u16 IntrId,
+			  u16 IntrMask, u32 *DataRead)
+{
+	int Status;
+
+	Status = XGpio_Initialize(InstancePtr, DeviceId);
+	if (Status != XST_SUCCESS) {
+			return XST_FAILURE;
+	}
+	Status = GpioSetupIntrSystem(IntcInstancePtr,
+								 InstancePtr,
+								 DeviceId,
+								 IntrId,
+								 IntrMask);
+	if (Status != XST_SUCCESS) {
+				return XST_FAILURE;
+		}
+	return Status;
+}
+
+int GpioSetupIntrSystem(INTC *IntcInstancePtr, XGpio *InstancePtr,
+			u16 DeviceId, u16 IntrId, u16 IntrMask)
+{
+	int Result;
+
+	GlobalIntrMask = IntrMask;
+
+	XScuGic_SetPriorityTriggerType(IntcInstancePtr, IntrId,
+					0xA0, 0x3);
+
+	/*
+	 * Connect the interrupt handler that will be called when an
+	 * interrupt occurs for the device.
+	 */
+	Result = XScuGic_Connect(IntcInstancePtr, IntrId,
+				 (Xil_ExceptionHandler)GpioHandler, InstancePtr);
+	if (Result != XST_SUCCESS) {
+		return Result;
+	}
+
+	/* Enable the interrupt for the GPIO device.*/
+	XScuGic_Enable(IntcInstancePtr, IntrId);
+
+	/*
+	 * Enable the GPIO channel interrupts so that push button can be
+	 * detected and enable interrupts for the GPIO device
+	 */
+	XGpio_InterruptEnable(InstancePtr, IntrMask);
+	XGpio_InterruptGlobalEnable(InstancePtr);
+
+	/*
+	 * Initialize the exception table and register the interrupt
+	 * controller handler with the exception table
+	 */
+	Xil_ExceptionInit();
+
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
+			 (Xil_ExceptionHandler)INTC_HANDLER, IntcInstancePtr);
+
+	/* Enable non-critical exceptions */
+	Xil_ExceptionEnable();
+
+	return XST_SUCCESS;
+}
+
+
+void GpioHandler(void *CallbackRef)
+{
+	XGpio *GpioPtr = (XGpio *)CallbackRef;
+
+	IntrFlag = 1;
+
+	/* Clear the Interrupt */
+	XGpio_InterruptClear(GpioPtr, GlobalIntrMask);
+
+}
+
+
+void GpioDisableIntr(INTC *IntcInstancePtr, XGpio *InstancePtr,
+			u16 IntrId, u16 IntrMask)
+{
+	XGpio_InterruptDisable(InstancePtr, IntrMask);
+#ifdef XPAR_INTC_0_DEVICE_ID
+	XIntc_Disable(IntcInstancePtr, IntrId);
+#else
+	/* Disconnect the interrupt */
+	XScuGic_Disable(IntcInstancePtr, IntrId);
+	XScuGic_Disconnect(IntcInstancePtr, IntrId);
+#endif
+	return;
+}

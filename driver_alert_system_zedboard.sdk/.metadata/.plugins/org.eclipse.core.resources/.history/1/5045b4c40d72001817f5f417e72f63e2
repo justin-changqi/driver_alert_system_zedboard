@@ -1,0 +1,27 @@
+/*
+ * main.c
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+
+int main()
+{
+	int Status;
+
+	xil_printf("CAN Interrupt Example Test \r\n");
+
+	/*
+	 * Run the Can interrupt example.
+	 */
+	Status = CanPsIntrExample(&IntcInstance, &CanInstance,
+				   CAN_DEVICE_ID, CAN_INTR_VEC_ID);
+	if (Status != XST_SUCCESS) {
+		xil_printf("CAN Interrupt Example Test Failed\r\n");
+		return XST_FAILURE;
+	}
+
+	xil_printf("Successfully ran CAN Interrupt Example Test\r\n");
+	return XST_SUCCESS;
+}

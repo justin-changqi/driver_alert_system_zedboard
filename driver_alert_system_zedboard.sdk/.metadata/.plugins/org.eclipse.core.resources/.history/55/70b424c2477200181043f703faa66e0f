@@ -1,0 +1,9 @@
+
+#include "gpio.h"
+
+#ifndef TESTAPP_GEN
+int main(void)
+{
+	return XST_SUCCESS;
+}
+#endif

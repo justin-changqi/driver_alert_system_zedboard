@@ -1,23 +1,60 @@
-21:47:30 **** Auto Build of configuration Debug for project driver_alert_system_cortex_a9 ****
+00:05:46 **** Auto Build of configuration Debug for project driver_alert_system_cortex_a9 ****
 make pre-build main-build 
 a9-linaro-pre-build-step
+ 
+Building file: ../src/can.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/can.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/can.d" -MT"src/can.o" -o "src/can.o" "../src/can.c"
+In file included from ../src/can.c:1:0:
+../src/can.h:163:13: warning: 'IntcInstance' defined but not used [-Wunused-variable]
+ static INTC IntcInstance; /* Instance of the Interrupt Controller driver */
+             ^~~~~~~~~~~~
+../src/can.h:162:15: warning: 'CanInstance' defined but not used [-Wunused-variable]
+ static XCanPs CanInstance;    /* Instance of the Can driver */
+               ^~~~~~~~~~~
+Finished building: ../src/can.c
+ 
+Building file: ../src/gpio.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/gpio.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/gpio.d" -MT"src/gpio.o" -o "src/gpio.o" "../src/gpio.c"
+../src/gpio.c: In function 'GpioHandler':
+../src/gpio.c:78:2: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+  printf("Tiger\n");
+  ^~~~~~
+../src/gpio.c:78:2: warning: incompatible implicit declaration of built-in function 'printf'
+../src/gpio.c:78:2: note: include '<stdio.h>' or provide a declaration of 'printf'
+Finished building: ../src/gpio.c
+ 
+Building file: ../src/i2c.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/i2c.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/i2c.d" -MT"src/i2c.o" -o "src/i2c.o" "../src/i2c.c"
+Finished building: ../src/i2c.c
  
 Building file: ../src/main.c
 Invoking: ARM v7 gcc compiler
 arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/main.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.c"
+In file included from ../src/main.c:4:0:
+../src/gpio.h:71:12: warning: 'GlobalIntrMask' defined but not used [-Wunused-variable]
+ static u16 GlobalIntrMask; /* GPIO channel mask that is needed by
+            ^~~~~~~~~~~~~~
 Finished building: ../src/main.c
+ 
+Building file: ../src/platform.c
+Invoking: ARM v7 gcc compiler
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/platform.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/platform.d" -MT"src/platform.o" -o "src/platform.o" "../src/platform.c"
+Finished building: ../src/platform.c
  
 Building target: driver_alert_system_cortex_a9.elf
 Invoking: ARM v7 gcc linker
-arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/lib -o "driver_alert_system_cortex_a9.elf"  ./src/i2c.o ./src/main.o ./src/platform.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../driver_alert_system_cortex_a9_bsp/ps7_cortexa9_0/lib -o "driver_alert_system_cortex_a9.elf"  ./src/can.o ./src/common.o ./src/gpio.o ./src/i2c.o ./src/main.o ./src/platform.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
 Finished building target: driver_alert_system_cortex_a9.elf
  
 Invoking: ARM v7 Print Size
 arm-none-eabi-size driver_alert_system_cortex_a9.elf  |tee "driver_alert_system_cortex_a9.elf.size"
    text	   data	    bss	    dec	    hex	filename
-  39548	   2744	  22984	  65276	   fefc	driver_alert_system_cortex_a9.elf
+  52416	   2224	  23080	  77720	  12f98	driver_alert_system_cortex_a9.elf
 Finished building: driver_alert_system_cortex_a9.elf.size
  
 
-21:47:31 Build Finished (took 362ms)
+00:05:47 Build Finished (took 518ms)
 
