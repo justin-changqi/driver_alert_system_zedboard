@@ -22,10 +22,10 @@
 #define INTC_DEVICE_ID			XPAR_SCUGIC_SINGLE_DEVICE_ID
 
 
-#define GPIO_LEDS			0x0003
-#define GPIO_SP				0x0004
+#define GPIO_LED_L				0x02
+#define GPIO_LED_R				0x01
+#define GPIO_SP					0x04
 
-#define GPIO_SW				0x0003
 
 #define BUTTON_CHANNEL	 	1
 #define OUTPUT_CHANNEL	 	2
@@ -33,7 +33,7 @@
 
 #define INTERRUPT_CONTROL_VALUE 0x03
 
-#define INTR_DELAY	0x00FFFFFF
+#define INTR_DELAY	0x000FFFFF
 
 #define INTC					XScuGic
 #define INTC_HANDLER			XScuGic_InterruptHandler
@@ -55,6 +55,8 @@ int GpioSetupIntrSystem(INTC *IntcInstancePtr,
 
 void GpioDisableIntr(INTC *IntcInstancePtr, XGpio *InstancePtr,
 			u16 IntrId, u16 IntrMask);
+
+void SetGpioOut(u16 value, u8 mask);
 
 XGpio Gpio;
 INTC Intc;

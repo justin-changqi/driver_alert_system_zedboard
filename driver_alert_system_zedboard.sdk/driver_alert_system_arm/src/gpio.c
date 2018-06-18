@@ -9,13 +9,13 @@ int Gpio_init()
 	u16 DeviceId = GPIO_DEVICE_ID;
 	u16 IntrId = INTC_GPIO_INTERRUPT_ID;
 	u16 IntrMask = BUTTON_CHANNEL;
-	gpio_count = 0;
 	int Status;
 
 	Status = XGpio_Initialize(InstancePtr, DeviceId);
 	if (Status != XST_SUCCESS) {
 			return XST_FAILURE;
 	}
+	XGpio_SetDataDirection(InstancePtr, OUTPUT_CHANNEL, 0x00);
 	Status = GpioSetupIntrSystem(IntcInstancePtr,
 								 InstancePtr,
 								 DeviceId,
@@ -109,7 +109,8 @@ void GpioHandler(void *CallbackRef)
 		return;
 	}
 	while (XGpio_DiscreteRead(GpioPtr, BUTTON_CHANNEL) > 0)
-	{ }
+	{
+	}
 	btn_value_ = 0;
 	/* Clear the Interrupt */
 	(void) XGpio_InterruptClear(GpioPtr, GlobalIntrMask);
@@ -117,13 +118,19 @@ void GpioHandler(void *CallbackRef)
 
 }
 
-
-void GpioDisableIntr(INTC *IntcInstancePtr, XGpio *InstancePtr,
-			u16 IntrId, u16 IntrMask)
+/*
+ * Set Output device value
+ * @param	value set 0 or 1
+ * @mask	which device you are setting GPIO_LED_L, GPIO_LED_R or GPIO_SP
+ */
+void SetGpioOut(u16 value, u8 mask)
 {
-	XGpio_InterruptDisable(InstancePtr, IntrMask);
-	/* Disconnect the interrupt */
-	XScuGic_Disable(IntcInstancePtr, IntrId);
-	XScuGic_Disconnect(IntcInstancePtr, IntrId);
-	return;
+	u32 current_state = XGpio_DiscreteRead(&Gpio, OUTPUT_CHANNEL);
+	if (value > 0) {
+		XGpio_DiscreteWrite(&Gpio, OUTPUT_CHANNEL, current_state|mask);
+	} else {
+		XGpio_DiscreteWrite(&Gpio, OUTPUT_CHANNEL, current_state & ~mask);
+	}
+
 }
+

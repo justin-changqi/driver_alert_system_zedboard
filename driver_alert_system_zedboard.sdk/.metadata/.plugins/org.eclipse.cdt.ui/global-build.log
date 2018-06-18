@@ -1,15 +1,5 @@
-12:06:39 **** Incremental Build of configuration Debug for project driver_alert_system_arm ****
+13:49:07 **** Incremental Build of configuration Debug for project driver_alert_system_arm ****
 make pre-build main-build 
 a9-linaro-pre-build-step
  
-Building file: ../src/gpio.c
-Invoking: ARM v7 gcc compiler
-arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/gpio.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/gpio.d" -MT"src/gpio.o" -o "src/gpio.o" "../src/gpio.c"
-../src/gpio.c: In function 'Gpio_init':
-../src/gpio.c:12:2: error: 'gpio_count' undeclared (first use in this function); did you mean 'Gpio_init'?
-  gpio_count = 0;
-  ^~~~~~~~~~
-  Gpio_init
-../src/gpio.c:12:2: note: each undeclared identifier is reported only once for each function it appears in
-src/subdir.mk:36: recipe for target 'src/gpio.o' failed
-make: *** [src/gpio.o] Error 1
+make: Nothing to be done for 'main-build'.

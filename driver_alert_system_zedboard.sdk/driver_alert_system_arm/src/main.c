@@ -5,11 +5,13 @@
 
 int main()
 {
+	int status;
     init_platform();
-
-    printf("Hello World\n\r");
-    Gpio_init();
-    printf("int\n\r");
+    status = Gpio_init();
+    if (status != XST_SUCCESS) {
+    	printf("Failed initial GPIO\n\r");
+    }
+    printf("Device initialed\n\r");
     while(1)
     {}
     cleanup_platform();
