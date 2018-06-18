@@ -16,35 +16,27 @@
 #include "xscugic.h"
 #include "xil_printf.h"
 
+#define GPIO_DEVICE_ID			XPAR_GPIO_0_DEVICE_ID
 
-#define BUTTON_DEVICE_ID				XPAR_AXI_GPIO_0_DEVICE_ID
-#define GPIO_CHANNEL_1_INT_MASK 	1
-
-#define INTC_GPIO_INTERRUPT_ID 		XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR
-#define INTC_DEVICE_ID				XPAR_SCUGIC_SINGLE_DEVICE_ID
+#define INTC_GPIO_INTERRUPT_ID 	XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR
+#define INTC_DEVICE_ID			XPAR_SCUGIC_SINGLE_DEVICE_ID
 
 
-//#define BTNS_DEVICE_ID			XPAR_AXI_GPIO_0_DEVICE_ID
-//#define LEDS_DEVICE_ID			XPAR_AXI_GPIO_1_DEVICE_ID
-//#define INTC_GPIO_INTERRIPT_ID 	XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR
+#define GPIO_LEDS			0x0003
+#define GPIO_SP				0x0004
 
-#define GPIO_LEDS		0x0003
-#define GPIO_SP			0x0004
+#define GPIO_SW				0x0003
 
-#define GPIO_SW			0x0003
-
-#define BUTTON_CHANNEL	 	 1	/* Channel 1 of the GPIO Device */
-#define OUTPUT_CHANNEL	 	 2	/* Channel 2 of the GPIO Device */
-#define BUTTON_INTERRUPT XGPIO_IR_CH1_MASK  /* Channel 1 Interrupt Mask */
+#define BUTTON_CHANNEL	 	1
+#define OUTPUT_CHANNEL	 	2
+#define BUTTON_INTERRUPT 	XGPIO_IR_CH1_MASK
 
 #define INTERRUPT_CONTROL_VALUE 0x03
 
 #define INTR_DELAY	0x00FFFFFF
 
-#define INTC_DEVICE_ID			XPAR_SCUGIC_SINGLE_DEVICE_ID
 #define INTC					XScuGic
 #define INTC_HANDLER			XScuGic_InterruptHandler
-
 
 // Function Define
 int Gpio_init();
@@ -64,8 +56,9 @@ int GpioSetupIntrSystem(INTC *IntcInstancePtr,
 void GpioDisableIntr(INTC *IntcInstancePtr, XGpio *InstancePtr,
 			u16 IntrId, u16 IntrMask);
 
-XGpio LEDInst, BTNInst;
-XScuGic INTCInst;
+XGpio Gpio;
+INTC Intc;
+int btn_value_;
 
 static u16 GlobalIntrMask; /* GPIO channel mask that is needed by
 			    * the Interrupt Handler */

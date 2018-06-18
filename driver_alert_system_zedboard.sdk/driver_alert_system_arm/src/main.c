@@ -10,6 +10,8 @@ int main()
     printf("Hello World\n\r");
     Gpio_init();
     printf("int\n\r");
+    while(1)
+    {}
     cleanup_platform();
     return 0;
 }

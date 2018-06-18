@@ -4,12 +4,12 @@
 
 int Gpio_init()
 {
-	 INTC *IntcInstancePtr = &INTCInst;
-	 XGpio *InstancePtr = &BTNInst;
-	 u16 DeviceId = BUTTON_DEVICE_ID;
-	 u16 IntrId = INTC_GPIO_INTERRUPT_ID;
-	 u16 IntrMask = GPIO_CHANNEL_1_INT_MASK;
-
+	INTC *IntcInstancePtr = &Intc;
+	XGpio *InstancePtr = &Gpio;
+	u16 DeviceId = GPIO_DEVICE_ID;
+	u16 IntrId = INTC_GPIO_INTERRUPT_ID;
+	u16 IntrMask = BUTTON_CHANNEL;
+	gpio_count = 0;
 	int Status;
 
 	Status = XGpio_Initialize(InstancePtr, DeviceId);
@@ -27,12 +27,30 @@ int Gpio_init()
 	return Status;
 }
 
-int GpioSetupIntrSystem(INTC *IntcInstancePtr, XGpio *InstancePtr,
-			u16 DeviceId, u16 IntrId, u16 IntrMask)
+int GpioSetupIntrSystem( INTC *IntcInstancePtr,
+						 XGpio *InstancePtr,
+						 u16 DeviceId,
+						 u16 IntrId, u16
+						 IntrMask)
 {
 	int Result;
 
 	GlobalIntrMask = IntrMask;
+
+	XScuGic_Config *IntcConfig;
+
+	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+
+	if (NULL == IntcConfig) {
+		return XST_FAILURE;
+	}
+
+	Result = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig,
+						IntcConfig->CpuBaseAddress);
+	if (Result != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
 
 	XScuGic_SetPriorityTriggerType(IntcInstancePtr, IntrId,
 					0xA0, 0x3);
@@ -75,9 +93,27 @@ int GpioSetupIntrSystem(INTC *IntcInstancePtr, XGpio *InstancePtr,
 void GpioHandler(void *CallbackRef)
 {
 	XGpio *GpioPtr = (XGpio *)CallbackRef;
-	printf("Tiger\n");
+	XGpio_InterruptDisable(GpioPtr, GlobalIntrMask);
+	if ((XGpio_InterruptGetStatus(GpioPtr) & GlobalIntrMask) != GlobalIntrMask) {
+		return;
+	}
+	// Debounce delay
+	int delay = 0;
+	while(delay < INTR_DELAY) {
+		delay++;
+	}
+	btn_value_ = XGpio_DiscreteRead(GpioPtr, BUTTON_CHANNEL);
+	if (btn_value_ == 0) {
+		(void) XGpio_InterruptClear(GpioPtr, GlobalIntrMask);
+		XGpio_InterruptEnable(GpioPtr, GlobalIntrMask);
+		return;
+	}
+	while (XGpio_DiscreteRead(GpioPtr, BUTTON_CHANNEL) > 0)
+	{ }
+	btn_value_ = 0;
 	/* Clear the Interrupt */
-	XGpio_InterruptClear(GpioPtr, GlobalIntrMask);
+	(void) XGpio_InterruptClear(GpioPtr, GlobalIntrMask);
+	XGpio_InterruptEnable(GpioPtr, GlobalIntrMask);
 
 }
 
