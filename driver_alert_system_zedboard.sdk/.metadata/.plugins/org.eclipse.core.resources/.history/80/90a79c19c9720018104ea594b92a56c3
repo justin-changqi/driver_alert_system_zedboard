@@ -1,0 +1,23 @@
+/*
+ * common.h
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#ifndef SRC_COMMON_H_
+#define SRC_COMMON_H_
+
+#include <stdio.h>
+
+struct Event {
+	int duration;
+	int start_time;
+//	u8 excute_flag;
+};
+
+Event ask_sensor_data;
+
+void initEvevents();
+
+#endif /* SRC_COMMON_H_ */

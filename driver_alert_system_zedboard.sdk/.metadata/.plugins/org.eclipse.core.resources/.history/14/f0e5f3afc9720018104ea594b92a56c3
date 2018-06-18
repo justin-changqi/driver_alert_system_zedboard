@@ -1,0 +1,14 @@
+/*
+ * common.c
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#include "common.h"
+
+void initEvevents()
+{
+	ask_sensor_data_.duration = 100;
+	ask_sensor_data_.start_time = Timer_ms;
+}

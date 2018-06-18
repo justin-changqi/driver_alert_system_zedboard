@@ -1,0 +1,39 @@
+/*
+ * common.h
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#ifndef SRC_COMMON_H_
+#define SRC_COMMON_H_
+
+#include <stdio.h>
+#include "xparameters.h"
+#include "xil_types.h"
+
+#define GPIO_LED_L				0x02
+#define GPIO_LED_R				0x01
+#define GPIO_SP					0x04
+
+struct Event {
+	int duration;
+	int start_time;
+};
+
+extern int Timer_ms;
+extern int btn_value_;
+
+struct Event ask_sensor_data_;
+struct Event flash_event_;
+u8 detect_enable;
+
+
+extern void SetGpioOut(u16 value, u8 mask);
+extern int getBtnValue();
+void initEvevents();
+void updateEvevents(struct Event *event);
+void LightHandler();
+
+
+#endif /* SRC_COMMON_H_ */

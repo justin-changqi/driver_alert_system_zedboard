@@ -12,7 +12,8 @@ C_SRCS += \
 ../src/gpio.c \
 ../src/i2c.c \
 ../src/main.c \
-../src/platform.c 
+../src/platform.c \
+../src/timer.c 
 
 OBJS += \
 ./src/can.o \
@@ -20,7 +21,8 @@ OBJS += \
 ./src/gpio.o \
 ./src/i2c.o \
 ./src/main.o \
-./src/platform.o 
+./src/platform.o \
+./src/timer.o 
 
 C_DEPS += \
 ./src/can.d \
@@ -28,7 +30,8 @@ C_DEPS += \
 ./src/gpio.d \
 ./src/i2c.d \
 ./src/main.d \
-./src/platform.d 
+./src/platform.d \
+./src/timer.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

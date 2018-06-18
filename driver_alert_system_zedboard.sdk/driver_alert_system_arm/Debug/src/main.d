@@ -19,7 +19,12 @@ src/main.o src/main.o: ../src/main.c ../src/platform.h \
  ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xil_exception.h \
  ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xscugic.h \
  ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xscugic_hw.h \
- ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xil_exception.h
+ ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xil_exception.h \
+ ../src/timer.h \
+ ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xtmrctr.h \
+ ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xtmrctr_l.h \
+ ../src/common.h \
+ ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xil_types.h
 
 ../src/platform.h:
 
@@ -64,3 +69,13 @@ src/main.o src/main.o: ../src/main.c ../src/platform.h \
 ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xscugic_hw.h:
 
 ../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xil_exception.h:
+
+../src/timer.h:
+
+../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xtmrctr.h:
+
+../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xtmrctr_l.h:
+
+../src/common.h:
+
+../../driver_alert_system_arm_bsp/ps7_cortexa9_0/include/xil_types.h:

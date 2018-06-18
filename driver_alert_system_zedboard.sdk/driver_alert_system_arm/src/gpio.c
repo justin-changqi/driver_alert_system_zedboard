@@ -2,7 +2,7 @@
 
 
 
-int Gpio_init()
+int GpioInit()
 {
 	INTC *IntcInstancePtr = &Intc;
 	XGpio *InstancePtr = &Gpio;
@@ -53,7 +53,7 @@ int GpioSetupIntrSystem( INTC *IntcInstancePtr,
 
 
 	XScuGic_SetPriorityTriggerType(IntcInstancePtr, IntrId,
-					0xA0, 0x3);
+					0x00, 0x3);
 	/*
 	 * Connect the interrupt handler that will be called when an
 	 * interrupt occurs for the device.
@@ -103,6 +103,7 @@ void GpioHandler(void *CallbackRef)
 		delay++;
 	}
 	btn_value_ = XGpio_DiscreteRead(GpioPtr, BUTTON_CHANNEL);
+	printf("btn_int: %d\n\r", btn_value_);
 	if (btn_value_ == 0) {
 		(void) XGpio_InterruptClear(GpioPtr, GlobalIntrMask);
 		XGpio_InterruptEnable(GpioPtr, GlobalIntrMask);
@@ -132,5 +133,10 @@ void SetGpioOut(u16 value, u8 mask)
 		XGpio_DiscreteWrite(&Gpio, OUTPUT_CHANNEL, current_state & ~mask);
 	}
 
+}
+
+int getBtnValue()
+{
+	return XGpio_DiscreteRead(&Gpio, BUTTON_CHANNEL);
 }
 

@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include "platform.h"
+#include "xil_printf.h"
+#include "gpio.h"
+#include "timer.h"
+
+#define FLASH_TIME		100
+
+int main()
+{
+	int status;
+    init_platform();
+    printf("Initialing ...\n\r");
+    status = GpioInit();
+    if (status != XST_SUCCESS) {
+    	printf("Failed initial GPIO\n\r");
+    }
+    TimerInit();
+    if (status != XST_SUCCESS) {
+        printf("Failed initial Timer\n\r");
+    }
+    initEvevents();
+    printf("Device initialed\n\r");
+    while(1)
+    {
+
+    }
+    cleanup_platform();
+    return 0;
+}
+

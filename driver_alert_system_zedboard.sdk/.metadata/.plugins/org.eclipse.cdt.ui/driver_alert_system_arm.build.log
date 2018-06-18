@@ -1,8 +1,8 @@
-13:49:07 **** Incremental Build of configuration Debug for project driver_alert_system_arm ****
+17:28:46 **** Incremental Build of configuration Debug for project driver_alert_system_arm ****
 make pre-build main-build 
 a9-linaro-pre-build-step
  
 make: Nothing to be done for 'main-build'.
 
-13:49:08 Build Finished (took 312ms)
+17:28:46 Build Finished (took 336ms)
 

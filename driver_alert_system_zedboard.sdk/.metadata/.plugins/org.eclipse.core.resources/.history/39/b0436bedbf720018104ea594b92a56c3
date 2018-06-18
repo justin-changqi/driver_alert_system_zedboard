@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include "platform.h"
+#include "xil_printf.h"
+#include "gpio.h"
+#include "timer.h"
+
+int main()
+{
+	int status;
+    init_platform();
+    status = GpioInit();
+    if (status != XST_SUCCESS) {
+    	printf("Failed initial GPIO\n\r");
+    }
+    TimerInit();
+    printf("Device initialed\n\r");
+    while(1)
+    {}
+    cleanup_platform();
+    return 0;
+}
+

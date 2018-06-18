@@ -39,7 +39,7 @@
 #define INTC_HANDLER			XScuGic_InterruptHandler
 
 // Function Define
-int Gpio_init();
+int GpioInit();
 
 int GpioIntrExample(INTC *IntcInstancePtr, XGpio *InstancePtr,
 			u16 DeviceId, u16 IntrId,
@@ -57,6 +57,8 @@ void GpioDisableIntr(INTC *IntcInstancePtr, XGpio *InstancePtr,
 			u16 IntrId, u16 IntrMask);
 
 void SetGpioOut(u16 value, u8 mask);
+
+int getBtnValue();
 
 XGpio Gpio;
 INTC Intc;
