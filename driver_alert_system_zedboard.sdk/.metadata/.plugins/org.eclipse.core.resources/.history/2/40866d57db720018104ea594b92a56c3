@@ -1,0 +1,311 @@
+/*
+ * can.c
+ *
+ *  Created on: Jun 18, 2018
+ *      Author: justin
+ */
+
+
+#include <stdio.h>
+#include "platform.h"
+#include "xil_printf.h"
+
+#include "xparameters.h"
+#include "xgpio.h"
+#include "xscugic.h"
+#include "xil_exception.h"
+#include "xil_printf.h"
+
+//CAN Include
+#include "xcanps.h"
+
+//parameters for GPIO
+#define INTC_DEVICE_ID 			XPAR_PS7_SCUGIC_0_DEVICE_ID
+#define BTNS_DEVICE_ID			XPAR_AXI_GPIO_0_DEVICE_ID
+#define LEDS_DEVICE_ID			XPAR_AXI_GPIO_1_DEVICE_ID
+#define INTC_GPIO_INTERRIPT_ID 	XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR
+
+#define BTN_INT					XGPIO_IR_CH2_MASK
+
+//parameters for CAN BUS
+#define TEST_BTR_SYNCJUMPWIDTH	1
+#define TEST_BTR_SECOND_TIMESEGMENT	1
+#define TEST_BTR_FIRST_TIMESEGMENT	6
+#define TEST_BRPR_BAUD_PRESCALAR	3
+#define CAN_DEVICE_ID_0	XPAR_XCANPS_0_DEVICE_ID
+#define CAN_DEVICE_ID_1	XPAR_XCANPS_1_DEVICE_ID
+
+#define XCANPS_MAX_FRAME_SIZE_IN_WORDS (XCANPS_MAX_FRAME_SIZE / sizeof(u32))
+
+// function define
+XGpio LEDInst, BTNInst;
+XScuGic INTCInst;
+static int led_data;
+static int btn_value;
+static int sw_value;
+
+static void BTN_Intr_Handler(void *baseaddr_p);
+static int InterruptSystemSetup(XScuGic *XScuGicInstancePtr);
+static int IntcInitFunction(u16 DeviceId, XGpio *GpioInstancePtr);
+
+//CAN Functions
+int CanPsPolledExample(u16 DeviceId, XCanPs *CanInstPtr);
+static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame);
+static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame);
+
+//Buffer
+static u32 TxFrame_0[XCANPS_MAX_FRAME_SIZE_IN_WORDS];
+static u32 RxFrame_0[XCANPS_MAX_FRAME_SIZE_IN_WORDS];
+static u32 TxFrame_1[XCANPS_MAX_FRAME_SIZE_IN_WORDS];
+static u32 RxFrame_1[XCANPS_MAX_FRAME_SIZE_IN_WORDS];
+
+/* Driver instance */
+static XCanPs Can_0;
+static XCanPs Can_1;
+
+u32 can_id_ = 0x00000015;
+u32 can_dlc_ = 0x00000008;
+
+
+void BTN_Intr_Handler(void *baseaddr_p)
+{
+	XGpio_InterruptDisable(&BTNInst, BTN_INT);
+	if ((XGpio_InterruptGetStatus(&BTNInst) & BTN_INT) != BTN_INT) {
+		return;
+	}
+	btn_value = XGpio_DiscreteRead(&BTNInst, 2);
+	if (btn_value & 0x01)
+	{
+		sw_value = XGpio_DiscreteRead(&BTNInst, 1);
+		led_data =  sw_value;
+		XGpio_DiscreteWrite(&LEDInst, 1, led_data);
+		can_id_ &= 0x00000000;
+		can_dlc_ &= 0x00000000;
+		can_id_ = sw_value >> 3;
+		can_dlc_ = (sw_value & 0x07) << 1;
+		SendFrame(&Can_0, TxFrame_0);
+		RecvFrame(&Can_1, RxFrame_1);
+	}
+	(void) XGpio_InterruptClear(&BTNInst, BTN_INT);
+	XGpio_InterruptEnable(&BTNInst, BTN_INT);
+}
+
+int InterruptSystemSetup(XScuGic *XScuGicInstancePtr)
+{
+	XGpio_InterruptEnable(&BTNInst, BTN_INT);
+	XGpio_InterruptGlobalEnable(&BTNInst);
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
+								 (Xil_ExceptionHandler) XScuGic_InterruptHandler,
+								 XScuGicInstancePtr);
+	Xil_ExceptionEnable();
+	return XST_SUCCESS;
+}
+
+int IntcInitFunction(u16 DeviceId, XGpio *GpioInstancePtr)
+{
+	XScuGic_Config *IntcConfig;
+	int status;
+	IntcConfig = XScuGic_LookupConfig(DeviceId);
+	status =  XScuGic_CfgInitialize(&INTCInst, IntcConfig,
+			  IntcConfig->CpuBaseAddress);
+	if (status != XST_SUCCESS)
+		return XST_FAILURE;
+	status = InterruptSystemSetup(&INTCInst);
+	if (status != XST_SUCCESS)
+			return XST_FAILURE;
+	status = XScuGic_Connect(&INTCInst, INTC_GPIO_INTERRIPT_ID,
+							 (Xil_ExceptionHandler) BTN_Intr_Handler, (void *) GpioInstancePtr);
+	if (status != XST_SUCCESS)
+				return XST_FAILURE;
+	XGpio_InterruptEnable(GpioInstancePtr, 1);
+	XGpio_InterruptGlobalEnable(GpioInstancePtr);
+	XScuGic_Enable(&INTCInst, INTC_GPIO_INTERRIPT_ID);
+	return XST_SUCCESS;
+}
+
+int CanPsPolledExample(u16 DeviceId, XCanPs *CanInstPtr)
+{
+	int Status;
+//	XCanPs *CanInstPtr = &Can;
+	XCanPs_Config *ConfigPtr;
+
+	/*
+	 * Initialize the Can device.
+	 */
+	ConfigPtr = XCanPs_LookupConfig(DeviceId);
+	if (CanInstPtr == NULL) {
+		return XST_FAILURE;
+	}
+	Status = XCanPs_CfgInitialize(CanInstPtr,
+					ConfigPtr,
+					ConfigPtr->BaseAddr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	/*
+	 * Run self-test on the device, which verifies basic sanity of the
+	 * device and the driver.
+	 */
+	Status = XCanPs_SelfTest(CanInstPtr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	/*
+	 * Enter Configuration Mode so we can setup Baud Rate Prescaler
+	 * Register (BRPR) and Bit Timing Register (BTR).
+	 */
+	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_CONFIG);
+	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_CONFIG);
+
+	/*
+	 * Setup Baud Rate Prescaler Register (BRPR) and
+	 * Bit Timing Register (BTR).
+	 */
+	XCanPs_SetBaudRatePrescaler(CanInstPtr, TEST_BRPR_BAUD_PRESCALAR);
+	XCanPs_SetBitTiming(CanInstPtr, TEST_BTR_SYNCJUMPWIDTH,
+				TEST_BTR_SECOND_TIMESEGMENT,
+
+				TEST_BTR_FIRST_TIMESEGMENT);
+
+	/*
+	 * Enter Loop Back Mode.
+	 */
+//	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_LOOPBACK);
+//	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_LOOPBACK);
+	// normal mode
+	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_NORMAL);
+	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_NORMAL);
+//
+//	/*
+//	 * Send a frame, receive the frame via the loop back and verify its
+//	 * contents.
+//	 */
+//	Status = SendFrame(CanInstPtr, TxFrame_0);
+//	if (Status != XST_SUCCESS) {
+//		return Status;
+//	}
+//
+//	Status = RecvFrame(CanInstPtr, RxFrame_0);
+//
+	return Status;
+}
+
+static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame)
+{
+	u8 *FramePtr;
+	int Index;
+	int Status;
+
+	/*
+	 * Create correct values for Identifier and Data Length Code Register.
+	 */
+	TxFrame[0] = (u32)XCanPs_CreateIdValue((u32)can_id_, 0, 0, 0, 0);
+	TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)can_dlc_);
+
+	/*
+	 * Now fill in the data field with known values so we can verify them
+	 * on receive.
+	 */
+	FramePtr = (u8 *)(&TxFrame[2]);
+	for (Index = 0; Index < can_dlc_; Index++) {
+		*FramePtr++ = (u8)Index;
+	}
+	while (XCanPs_IsTxFifoFull(InstancePtr) == TRUE);
+	Status = XCanPs_Send(InstancePtr, TxFrame);
+	if (Status != XST_SUCCESS)
+	{
+		printf("Failed send frame\n");
+	}
+	else
+	{
+		printf(">>>> Success send frame >>>>\n");
+		printf("\t CAN ID:  %x \n", can_id_);
+		printf("\t DLC:  %d \n", can_dlc_);
+		printf("\t Data: ");
+		for (int i = 0; i < can_dlc_; i++)
+		{
+			if (i != can_dlc_ - 1)
+			{
+				printf("%x, ", i);
+			}
+			else
+			{
+				printf("%x\n", i);
+			}
+
+		}
+	}
+
+	return Status;
+}
+
+static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame)
+{
+	u8 *FramePtr;
+	int Status;
+
+	/*
+	 * Wait until a frame is received.
+	 */
+	while (XCanPs_IsRxEmpty(InstancePtr) == TRUE);
+
+	/*
+	 * Receive a frame and verify its contents.
+	 */
+	Status = XCanPs_Recv(InstancePtr, RxFrame);
+	if (Status == XST_SUCCESS) {
+		u32 id = RxFrame[0] >> XCANPS_IDR_ID1_SHIFT;
+		u32 dlc = RxFrame[1] >> XCANPS_DLCR_DLC_SHIFT;
+		FramePtr = (u8 *)(&RxFrame[2]);
+		printf("<<<< Success receive frame <<<<\n");
+		printf("\t CAN ID:  %x \n", id);
+		printf("\t DLC:  %d \n", dlc);
+		printf("\t Data: ");
+		for (int i = 0; i < can_dlc_; i++)
+		{
+			if (i != can_dlc_ - 1)
+			{
+				printf("%x, ", *FramePtr++);
+			}
+			else
+			{
+				printf("%x\n", *FramePtr++);
+			}
+
+		}
+
+	}
+	return Status;
+}
+
+int main()
+{
+    init_platform();
+    int status;
+    // CAN Bus setting
+    CanPsPolledExample(CAN_DEVICE_ID_0, &Can_0);
+    CanPsPolledExample(CAN_DEVICE_ID_1, &Can_1);
+//	SendFrame(&Can_0, TxFrame_0);
+//	RecvFrame(&Can_0, RxFrame_0);
+    // Initialize LEDs
+    status = XGpio_Initialize(&LEDInst, LEDS_DEVICE_ID);
+    if (status != XST_SUCCESS)
+    			return XST_FAILURE;
+    // Initialize Push Button
+    status = XGpio_Initialize(&BTNInst, BTNS_DEVICE_ID);
+        if (status != XST_SUCCESS)
+        			return XST_FAILURE;
+    // Set LEDs direction to output
+    XGpio_SetDataDirection(&LEDInst, 1, 0x00);
+    XGpio_SetDataDirection(&BTNInst, 1, 0xFF);
+    // XGpio_SetDataDirection(&BTNInst, 2, 0xFF);
+    status = IntcInitFunction(INTC_DEVICE_ID, &BTNInst);
+    if (status != XST_SUCCESS)
+        			return XST_FAILURE;
+    cleanup_platform();
+    while(1)
+    {}
+    return 0;
+}

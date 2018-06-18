@@ -16,6 +16,7 @@
 #define GPIO_LED_R				0x01
 #define GPIO_SP					0x04
 
+
 struct Event {
 	int duration;
 	int start_time;
@@ -31,6 +32,14 @@ u8 detect_enable;
 
 extern void SetGpioOut(u16 value, u8 mask);
 extern int getBtnValue();
+
+//can bus
+extern void CANsendData(u8 data);
+extern void CANgetData();
+
+//i2c
+extern int I2CsendData(u8 data);
+
 void initEvevents();
 void updateEvevents(struct Event *event);
 void LightHandler();

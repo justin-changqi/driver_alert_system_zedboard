@@ -4,6 +4,8 @@
 #include "gpio.h"
 #include "timer.h"
 #include "common.h"
+#include "can.h"
+#include "i2c.h"
 
 #define FLASH_TIME		100
 
@@ -16,6 +18,8 @@ int main()
     if (status != XST_SUCCESS) {
     	printf("Failed initial GPIO\n\r");
     }
+    CanInit();
+    initI2c();
     TimerInit();
     if (status != XST_SUCCESS) {
         printf("Failed initial Timer\n\r");

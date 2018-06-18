@@ -8,6 +8,7 @@ LD_SRCS += \
 
 C_SRCS += \
 ../src/can.c \
+../src/can_intr.c \
 ../src/common.c \
 ../src/gpio.c \
 ../src/i2c.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 
 OBJS += \
 ./src/can.o \
+./src/can_intr.o \
 ./src/common.o \
 ./src/gpio.o \
 ./src/i2c.o \
@@ -26,6 +28,7 @@ OBJS += \
 
 C_DEPS += \
 ./src/can.d \
+./src/can_intr.d \
 ./src/common.d \
 ./src/gpio.d \
 ./src/i2c.d \

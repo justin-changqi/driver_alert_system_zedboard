@@ -9,7 +9,7 @@
 
 void initEvevents()
 {
-	ask_sensor_data_.duration = 100;
+	ask_sensor_data_.duration = 1000;
 	ask_sensor_data_.start_time = Timer_ms;
 	flash_event_.duration = 500;
 	flash_event_.start_time = Timer_ms;
@@ -39,10 +39,14 @@ void LightHandler()
 		SetGpioOut(0, GPIO_LED_R);
 		break;
 	case 1:
+		SetGpioOut(0, GPIO_LED_R);
 		SetGpioOut(count%2, GPIO_LED_L);
+		I2CsendData(0x01);
 		break;
 	case 2:
+		SetGpioOut(0, GPIO_LED_L);
 		SetGpioOut(count%2, GPIO_LED_R);
+		I2CsendData(0x08);
 		break;
 	default:
 		break;
@@ -53,5 +57,6 @@ void LightHandler()
 
 void DetectHandler()
 {
-
+	CANsendData(0x05);
+	CANgetData();
 }

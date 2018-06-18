@@ -26,7 +26,7 @@
 
 /************************** Function Prototypes *******************************/
 int initI2c();
-int sendData();
+int I2CsendData(u8 data);
 int IicPsMasterPolledExample(u16 DeviceId);
 /************************** Variable Definitions ******************************/
 

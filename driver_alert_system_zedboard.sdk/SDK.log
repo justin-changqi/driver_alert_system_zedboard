@@ -9482,3 +9482,390 @@ con
 ----------------End of Script----------------
 
 17:22:18 INFO  : Disconnected from the channel tcfchan#85.
+18:05:15 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:05:15 INFO  : 'fpga -state' command is executed.
+18:05:15 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:05:15 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:05:15 INFO  : 'jtag frequency' command is executed.
+18:05:15 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:05:15 INFO  : Context for 'APU' is selected.
+18:05:15 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:05:15 INFO  : 'configparams force-mem-access 1' command is executed.
+18:05:15 INFO  : Context for 'APU' is selected.
+18:05:15 INFO  : 'stop' command is executed.
+18:05:15 INFO  : 'ps7_init' command is executed.
+18:05:15 INFO  : 'ps7_post_config' command is executed.
+18:05:16 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:05:16 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:05:16 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:05:16 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:05:16 INFO  : 'configparams force-mem-access 0' command is executed.
+18:05:16 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:05:16 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:05:16 INFO  : 'con' command is executed.
+18:05:16 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:05:16 INFO  : Disconnected from the channel tcfchan#86.
+18:06:47 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:06:47 INFO  : 'fpga -state' command is executed.
+18:06:47 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:06:48 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:06:48 INFO  : 'jtag frequency' command is executed.
+18:06:48 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:06:48 INFO  : Context for 'APU' is selected.
+18:06:48 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:06:48 INFO  : 'configparams force-mem-access 1' command is executed.
+18:06:48 INFO  : Context for 'APU' is selected.
+18:06:48 INFO  : 'stop' command is executed.
+18:06:48 INFO  : 'ps7_init' command is executed.
+18:06:48 INFO  : 'ps7_post_config' command is executed.
+18:06:48 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:06:48 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:06:48 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:06:48 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:06:48 INFO  : 'configparams force-mem-access 0' command is executed.
+18:06:48 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:06:48 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:06:48 INFO  : 'con' command is executed.
+18:06:48 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:06:48 INFO  : Disconnected from the channel tcfchan#87.
+18:07:24 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:07:24 INFO  : 'fpga -state' command is executed.
+18:07:24 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:07:24 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:07:24 INFO  : 'jtag frequency' command is executed.
+18:07:24 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:07:24 INFO  : Context for 'APU' is selected.
+18:07:24 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:07:24 INFO  : 'configparams force-mem-access 1' command is executed.
+18:07:24 INFO  : Context for 'APU' is selected.
+18:07:24 INFO  : 'stop' command is executed.
+18:07:24 INFO  : 'ps7_init' command is executed.
+18:07:24 INFO  : 'ps7_post_config' command is executed.
+18:07:24 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:07:24 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:07:24 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:07:24 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:07:24 INFO  : 'configparams force-mem-access 0' command is executed.
+18:07:24 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:07:24 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:07:24 INFO  : 'con' command is executed.
+18:07:24 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:07:24 INFO  : Disconnected from the channel tcfchan#88.
+18:08:05 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:08:05 INFO  : 'fpga -state' command is executed.
+18:08:05 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:08:05 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:08:05 INFO  : 'jtag frequency' command is executed.
+18:08:05 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:08:05 INFO  : Context for 'APU' is selected.
+18:08:05 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:08:05 INFO  : 'configparams force-mem-access 1' command is executed.
+18:08:05 INFO  : Context for 'APU' is selected.
+18:08:05 INFO  : 'stop' command is executed.
+18:08:06 INFO  : 'ps7_init' command is executed.
+18:08:06 INFO  : 'ps7_post_config' command is executed.
+18:08:06 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:08:06 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:08:06 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:08:06 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:08:06 INFO  : 'configparams force-mem-access 0' command is executed.
+18:08:06 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:08:06 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:08:06 INFO  : 'con' command is executed.
+18:08:06 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:08:06 INFO  : Disconnected from the channel tcfchan#89.
+18:14:51 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:14:51 INFO  : 'fpga -state' command is executed.
+18:14:51 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:14:52 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:14:52 INFO  : 'jtag frequency' command is executed.
+18:14:52 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:14:52 INFO  : Context for 'APU' is selected.
+18:14:52 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:14:52 INFO  : 'configparams force-mem-access 1' command is executed.
+18:14:52 INFO  : Context for 'APU' is selected.
+18:14:52 INFO  : 'stop' command is executed.
+18:14:52 INFO  : 'ps7_init' command is executed.
+18:14:52 INFO  : 'ps7_post_config' command is executed.
+18:14:52 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:14:52 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:14:52 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:14:52 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:14:52 INFO  : 'configparams force-mem-access 0' command is executed.
+18:14:52 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:14:52 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:14:52 INFO  : 'con' command is executed.
+18:14:52 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:14:52 INFO  : Disconnected from the channel tcfchan#90.
+18:30:35 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:30:35 INFO  : 'fpga -state' command is executed.
+18:30:35 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:30:35 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:30:35 INFO  : 'jtag frequency' command is executed.
+18:30:35 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:30:35 INFO  : Context for 'APU' is selected.
+18:30:35 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:30:35 INFO  : 'configparams force-mem-access 1' command is executed.
+18:30:35 INFO  : Context for 'APU' is selected.
+18:30:35 INFO  : 'stop' command is executed.
+18:30:35 INFO  : 'ps7_init' command is executed.
+18:30:35 INFO  : 'ps7_post_config' command is executed.
+18:30:35 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:30:35 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:30:35 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:30:35 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:30:35 INFO  : 'configparams force-mem-access 0' command is executed.
+18:30:35 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:30:35 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:30:35 INFO  : 'con' command is executed.
+18:30:35 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:30:35 INFO  : Disconnected from the channel tcfchan#91.
+18:35:51 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:35:51 INFO  : 'fpga -state' command is executed.
+18:35:51 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:35:51 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:35:51 INFO  : 'jtag frequency' command is executed.
+18:35:51 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:35:51 INFO  : Context for 'APU' is selected.
+18:35:51 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:35:51 INFO  : 'configparams force-mem-access 1' command is executed.
+18:35:51 INFO  : Context for 'APU' is selected.
+18:35:51 INFO  : 'stop' command is executed.
+18:35:52 INFO  : 'ps7_init' command is executed.
+18:35:52 INFO  : 'ps7_post_config' command is executed.
+18:35:52 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:35:52 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:35:52 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:35:52 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:35:52 INFO  : 'configparams force-mem-access 0' command is executed.
+18:35:52 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:35:52 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:35:52 INFO  : 'con' command is executed.
+18:35:52 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:35:52 INFO  : Disconnected from the channel tcfchan#92.
+18:36:18 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:36:18 INFO  : 'fpga -state' command is executed.
+18:36:18 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:36:18 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:36:18 INFO  : 'jtag frequency' command is executed.
+18:36:18 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:36:18 INFO  : Context for 'APU' is selected.
+18:36:18 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:36:18 INFO  : 'configparams force-mem-access 1' command is executed.
+18:36:18 INFO  : Context for 'APU' is selected.
+18:36:18 INFO  : 'stop' command is executed.
+18:36:18 INFO  : 'ps7_init' command is executed.
+18:36:18 INFO  : 'ps7_post_config' command is executed.
+18:36:18 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:36:18 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:36:18 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:36:18 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:36:18 INFO  : 'configparams force-mem-access 0' command is executed.
+18:36:18 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:36:18 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:36:18 INFO  : 'con' command is executed.
+18:36:18 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:36:18 INFO  : Disconnected from the channel tcfchan#93.
+18:37:39 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zed 210248585405" && level==0} -index 1' command is executed.
+18:37:39 INFO  : 'fpga -state' command is executed.
+18:37:39 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+18:37:39 INFO  : Jtag cable 'Digilent Zed 210248585405' is selected.
+18:37:39 INFO  : 'jtag frequency' command is executed.
+18:37:39 INFO  : Sourcing of '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl' is done.
+18:37:39 INFO  : Context for 'APU' is selected.
+18:37:39 INFO  : Hardware design information is loaded from '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf'.
+18:37:39 INFO  : 'configparams force-mem-access 1' command is executed.
+18:37:39 INFO  : Context for 'APU' is selected.
+18:37:39 INFO  : 'stop' command is executed.
+18:37:39 INFO  : 'ps7_init' command is executed.
+18:37:39 INFO  : 'ps7_post_config' command is executed.
+18:37:39 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:37:39 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+18:37:39 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:37:40 INFO  : The application '/home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf' is downloaded to processor 'ps7_cortexa9_0'.
+18:37:40 INFO  : 'configparams force-mem-access 0' command is executed.
+18:37:40 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+loadhw -hw /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/design_1_wrapper_hw_platform_0/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+dow /home/justin/vivado/driver_alert_system_zedboard/driver_alert_system_zedboard.sdk/driver_alert_system_arm/Debug/driver_alert_system_arm.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+18:37:40 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+18:37:40 INFO  : 'con' command is executed.
+18:37:40 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zed 210248585405"} -index 0
+con
+----------------End of Script----------------
+
+18:37:40 INFO  : Disconnected from the channel tcfchan#94.

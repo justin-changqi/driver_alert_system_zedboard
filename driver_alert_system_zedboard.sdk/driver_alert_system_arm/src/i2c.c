@@ -57,15 +57,16 @@ int initI2c()
 	 */
 	XIicPs_SetSClk(&Iic, IIC_SCLK_RATE);
 
-	SendBuffer[0] = (u8)0x02;
+	SendBuffer[0] = (u8)0x00;
 	RecvBuffer[0] = 0;
 
 	return XST_SUCCESS;
 }
 
-int sendData()
+int I2CsendData(u8 data)
 {
 	int Status;
+	SendBuffer[0] = data;
 	Status = XIicPs_MasterSendPolled(&Iic, SendBuffer,
 				 TEST_BUFFER_SIZE, IIC_SLAVE_ADDR);
 	if (Status != XST_SUCCESS) {

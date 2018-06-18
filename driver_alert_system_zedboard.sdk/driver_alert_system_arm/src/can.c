@@ -1,80 +1,36 @@
+/*
+ * can.c
+ *
+ *  Created on: Jun 18, 2018
+ *      Author: justin
+ */
+
 #include "can.h"
 
-/****************************************************************************/
-/**
-*
-* This function is the main function of the Can interrupt example.
-*
-* @param	None.
-*
-* @return
-*		- XST_SUCCESS if the example has completed successfully.
-*		- XST_FAILURE if the example has failed.
-*
-* @note		None.
-*
-*****************************************************************************/
-#define TESTAPP_GEN
-
-#ifndef TESTAPP_GEN
-int main()
+int CanInit()
 {
 	int Status;
-
-	xil_printf("CAN Interrupt Example Test \r\n");
-
-	/*
-	 * Run the Can interrupt example.
-	 */
-	Status = CanPsIntrExample(&IntcInstance, &CanInstance,
-				   CAN_DEVICE_ID, CAN_INTR_VEC_ID);
-	if (Status != XST_SUCCESS) {
-		xil_printf("CAN Interrupt Example Test Failed\r\n");
-		return XST_FAILURE;
-	}
-
-	xil_printf("Successfully ran CAN Interrupt Example Test\r\n");
-	return XST_SUCCESS;
-}
-#endif
-
-/*****************************************************************************/
-/**
-*
-* The main entry point for showing the XCanPs driver in interrupt mode.
-* The example configures the device for internal loop back mode, then
-* sends a CAN frame and receives the same CAN frame.
-*
-* @param	IntcInstPtr is a pointer to the instance of the INTC driver.
-* @param	CanInstPtr is a pointer to the instance of the CAN driver which
-*		is going to be connected to the interrupt controller.
-* @param	CanDeviceId is the device Id of the CAN device and is typically
-*		XPAR_<CANPS_instance>_DEVICE_ID value from xparameters.h.
-* @param	CanIntrId is the interrupt Id and is typically
-*		XPAR_<CANPS_instance>_INTR value from xparameters.h.
-*
-* @return	XST_SUCCESS if successful, otherwise driver-specific error code.
-*
-* @note		If the device is not working correctly, this function may enter
-*		an infinite loop and will never return to the caller.
-*
-******************************************************************************/
-int CanPsIntrExample(INTC *IntcInstPtr, XCanPs *CanInstPtr,
-			u16 CanDeviceId, u16 CanIntrId)
-{
-	int Status;
+	can_id_ = 0x00000015;
+	can_dlc_tx_ = 0x00000001;
+	can_dlc_rx_ = 0x00000008;
+	u16 DeviceId = CAN_DEVICE_ID_0;
+	XCanPs *CanInstPtr = &Can_0;
+//	XCanPs *CanInstPtr = &Can;
 	XCanPs_Config *ConfigPtr;
 
 	/*
 	 * Initialize the Can device.
 	 */
-	ConfigPtr = XCanPs_LookupConfig(CanDeviceId);
-	if (ConfigPtr == NULL) {
+	ConfigPtr = XCanPs_LookupConfig(DeviceId);
+	if (CanInstPtr == NULL) {
 		return XST_FAILURE;
 	}
-	XCanPs_CfgInitialize(CanInstPtr,
-				ConfigPtr,
-				ConfigPtr->BaseAddr);
+	Status = XCanPs_CfgInitialize(CanInstPtr,
+					ConfigPtr,
+					ConfigPtr->BaseAddr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
 
 	/*
 	 * Run self-test on the device, which verifies basic sanity of the
@@ -85,119 +41,33 @@ int CanPsIntrExample(INTC *IntcInstPtr, XCanPs *CanInstPtr,
 		return XST_FAILURE;
 	}
 
-	/*
-	 * Configure CAN device.
-	 */
-	Config(CanInstPtr);
+	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_CONFIG);
+	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_CONFIG);
 
-	/*
-	 * Set interrupt handlers.
-	 */
-	XCanPs_SetHandler(CanInstPtr, XCANPS_HANDLER_SEND,
-			(void *)SendHandler, (void *)CanInstPtr);
-	XCanPs_SetHandler(CanInstPtr, XCANPS_HANDLER_RECV,
-			(void *)RecvHandler, (void *)CanInstPtr);
-	XCanPs_SetHandler(CanInstPtr, XCANPS_HANDLER_ERROR,
-			(void *)ErrorHandler, (void *)CanInstPtr);
-	XCanPs_SetHandler(CanInstPtr, XCANPS_HANDLER_EVENT,
-			(void *)EventHandler, (void *)CanInstPtr);
+	XCanPs_SetBaudRatePrescaler(CanInstPtr, TEST_BRPR_BAUD_PRESCALAR);
+	XCanPs_SetBitTiming(CanInstPtr, TEST_BTR_SYNCJUMPWIDTH,
+				TEST_BTR_SECOND_TIMESEGMENT,
 
-	/*
-	 * Initialize the flags.
-	 */
-	SendDone = FALSE;
-	RecvDone = FALSE;
-	LoopbackError = FALSE;
+				TEST_BTR_FIRST_TIMESEGMENT);
 
-	/*
-	 * Connect to the interrupt controller.
-	 */
-	Status =  SetupInterruptSystem(IntcInstPtr,
-					CanInstPtr,
-					CanIntrId);
-	if (Status != XST_SUCCESS) {
-		return XST_FAILURE;
-	}
-
-	/*
-	 * Enable all interrupts in CAN device.
-	 */
-	XCanPs_IntrEnable(CanInstPtr, XCANPS_IXR_ALL);
-
-	/*
-	 * Enter Loop Back Mode.
-	 */
 	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_NORMAL);
 	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_NORMAL);
 
-	/*
-	 * Loop back a frame. The RecvHandler is expected to handle
-	 * the frame reception.
-	 */
-	SendFrame(CanInstPtr); /* Send a frame */
-
-	/*
-	 * Wait here until both sending and reception have been completed.
-	 */
-	while ((SendDone != TRUE) || (RecvDone != TRUE));
-
-	/*
-	 * Check for errors found in the callbacks.
-	 */
-	if (LoopbackError == TRUE) {
-		return XST_LOOPBACK_ERROR;
-	}
-
-	return XST_SUCCESS;
+	return Status;
 }
 
-/*****************************************************************************/
-/**
-*
-* This function configures CAN device. Baud Rate Prescaler Register (BRPR) and
-* Bit Timing Register (BTR) are set in this function.
-*
-* @param	InstancePtr is a pointer to the driver instance.
-*
-* @return	None.
-*
-* @note		If the CAN device is not working correctly, this function may
-*		enter an infinite loop and will never return to the caller.
-*
-******************************************************************************/
-static void Config(XCanPs *InstancePtr)
+void CANsendData(u8 data)
 {
-	/*
-	 * Enter Configuration Mode if the device is not currently in
-	 * Configuration Mode.
-	 */
-	XCanPs_EnterMode(InstancePtr, XCANPS_MODE_CONFIG);
-	while(XCanPs_GetMode(InstancePtr) != XCANPS_MODE_CONFIG);
-
-	/*
-	 * Setup Baud Rate Prescaler Register (BRPR) and
-	 * Bit Timing Register (BTR).
-	 */
-	XCanPs_SetBaudRatePrescaler(InstancePtr, TEST_BRPR_BAUD_PRESCALAR);
-	XCanPs_SetBitTiming(InstancePtr, TEST_BTR_SYNCJUMPWIDTH,
-					TEST_BTR_SECOND_TIMESEGMENT,
-					TEST_BTR_FIRST_TIMESEGMENT);
-
+	SendFrame(&Can_0, TxFrame_0);
 }
 
-/*****************************************************************************/
-/**
-*
-* Send a CAN frame.
-*
-* @param	InstancePtr is a pointer to the driver instance.
-*
-* @return	None.
-*
-* @note		None.
-*
-******************************************************************************/
-static void SendFrame(XCanPs *InstancePtr)
+void CANgetData()
+{
+	RecvFrame(&Can_0, RxFrame_0);
+}
+
+
+static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame)
 {
 	u8 *FramePtr;
 	int Index;
@@ -206,390 +76,81 @@ static void SendFrame(XCanPs *InstancePtr)
 	/*
 	 * Create correct values for Identifier and Data Length Code Register.
 	 */
-	TxFrame[0] = (u32)XCanPs_CreateIdValue((u32)TEST_MESSAGE_ID, 0, 0, 0, 0);
-	TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)FRAME_DATA_LENGTH_TX);
+	TxFrame[0] = (u32)XCanPs_CreateIdValue((u32)can_id_, 0, 0, 0, 0);
+	TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)can_dlc_tx_);
 
 	/*
 	 * Now fill in the data field with known values so we can verify them
 	 * on receive.
 	 */
 	FramePtr = (u8 *)(&TxFrame[2]);
-	for (Index = 0; Index < FRAME_DATA_LENGTH_TX; Index++) {
-		*FramePtr++ = (u8)0x50;
+	for (Index = 0; Index < can_dlc_tx_; Index++) {
+		*FramePtr++ = (u8)Index;
 	}
-
-	/*
-	 * Now wait until the TX FIFO is not full and send the frame.
-	 */
 	while (XCanPs_IsTxFifoFull(InstancePtr) == TRUE);
-
 	Status = XCanPs_Send(InstancePtr, TxFrame);
-	if (Status != XST_SUCCESS) {
-		/*
-		 * The frame could not be sent successfully.
-		 */
-		LoopbackError = TRUE;
-		SendDone = TRUE;
-		RecvDone = TRUE;
+	if (Status != XST_SUCCESS)
+	{
+		printf("Failed send frame\n");
 	}
-}
+	else
+	{
+		printf(">>>> Success send frame >>>>\n");
+		printf("\t CAN ID:  %x \n", can_id_);
+		printf("\t DLC:  %d \n", can_dlc_tx_);
+		printf("\t Data: ");
+		for (int i = 0; i < can_dlc_tx_; i++)
+		{
+			if (i != can_dlc_tx_ - 1)
+			{
+				printf("%x, ", i);
+			}
+			else
+			{
+				printf("%x\n", i);
+			}
 
-
-/*****************************************************************************/
-/**
-*
-* Callback function (called from interrupt handler) to handle confirmation of
-* transmit events when in interrupt mode.
-*
-* @param	CallBackRef is the callback reference passed from the interrupt
-*		handler, which in our case is a pointer to the driver instance.
-*
-* @return	None.
-*
-* @note		This function is called by the driver within interrupt context.
-*
-******************************************************************************/
-static void SendHandler(void *CallBackRef)
-{
-	/*
-	 * The frame was sent successfully. Notify the task context.
-	 */
-	SendDone = TRUE;
-}
-
-
-/*****************************************************************************/
-/**
-*
-* Callback function (called from interrupt handler) to handle frames received in
-* interrupt mode.  This function is called once per frame received.
-* The driver's receive function is called to read the frame from RX FIFO.
-*
-* @param	CallBackRef is the callback reference passed from the interrupt
-*		handler, which in our case is a pointer to the device instance.
-*
-* @return	None.
-*
-* @note		This function is called by the driver within interrupt context.
-*
-******************************************************************************/
-static void RecvHandler(void *CallBackRef)
-{
-	XCanPs *CanPtr = (XCanPs *)CallBackRef;
-	int Status;
-	int Index;
-	u8 *FramePtr;
-
-	Status = XCanPs_Recv(CanPtr, RxFrame);
-	if (Status != XST_SUCCESS) {
-		LoopbackError = TRUE;
-		RecvDone = TRUE;
-		return;
-	}
-
-	/*
-	 * Verify Identifier and Data Length Code.
-	 */
-	if (RxFrame[0] != (u32)XCanPs_CreateIdValue((u32)TEST_MESSAGE_ID, 0, 0, 0, 0)) {
-		LoopbackError = TRUE;
-		RecvDone = TRUE;
-		return;
-	}
-
-	if ((RxFrame[1] & ~XCANPS_DLCR_TIMESTAMP_MASK) != TxFrame[1]) {
-		LoopbackError = TRUE;
-		RecvDone = TRUE;
-		return;
-	}
-
-	/*
-	 * Verify the Data field contents.
-	 */
-	FramePtr = (u8 *)(&RxFrame[2]);
-	for (Index = 0; Index < FRAME_DATA_LENGTH_RX; Index++) {
-		if (*FramePtr++ != (u8)Index) {
-			LoopbackError = TRUE;
-			break;
 		}
 	}
 
-	RecvDone = TRUE;
+	return Status;
 }
 
-
-/*****************************************************************************/
-/**
-*
-* Callback function (called from interrupt handler) to handle error interrupt.
-* Error code read from Error Status register is passed into this function.
-*
-* @param	CallBackRef is the callback reference passed from the interrupt
-*		handler, which in our case is a pointer to the driver instance.
-* @param	ErrorMask is a bit mask indicating the cause of the error.
-*		Its value equals 'OR'ing one or more XCANPS_ESR_* defined in
-*		xcanps_hw.h.
-*
-* @return	None.
-*
-* @note		This function is called by the driver within interrupt context.
-*
-******************************************************************************/
-static void ErrorHandler(void *CallBackRef, u32 ErrorMask)
+static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame)
 {
-
-	if(ErrorMask & XCANPS_ESR_ACKER_MASK) {
-		/*
-		 * ACK Error handling code should be put here.
-		 */
-	}
-
-	if(ErrorMask & XCANPS_ESR_BERR_MASK) {
-		/*
-		 * Bit Error handling code should be put here.
-		 */
-	}
-
-	if(ErrorMask & XCANPS_ESR_STER_MASK) {
-		/*
-		 * Stuff Error handling code should be put here.
-		 */
-	}
-
-	if(ErrorMask & XCANPS_ESR_FMER_MASK) {
-		/*
-		 * Form Error handling code should be put here.
-		 */
-	}
-
-	if(ErrorMask & XCANPS_ESR_CRCER_MASK) {
-		/*
-		 * CRC Error handling code should be put here.
-		 */
-	}
-
-	/*
-	 * Set the shared variables.
-	 */
-	LoopbackError = TRUE;
-	RecvDone = TRUE;
-	SendDone = TRUE;
-}
-
-
-/*****************************************************************************/
-/**
-*
-* Callback function (called from interrupt handler) to handle the following
-* interrupts:
-*   - XCANPS_IXR_BSOFF_MASK:	Bus Off Interrupt
-*   - XCANPS_IXR_RXOFLW_MASK:	RX FIFO Overflow Interrupt
-*   - XCANPS_IXR_RXUFLW_MASK:	RX FIFO Underflow Interrupt
-*   - XCANPS_IXR_TXBFLL_MASK:	TX High Priority Buffer Full Interrupt
-*   - XCANPS_IXR_TXFLL_MASK:	TX FIFO Full Interrupt
-*   - XCANPS_IXR_WKUP_MASK:	Wake up Interrupt
-*   - XCANPS_IXR_SLP_MASK:	Sleep Interrupt
-*   - XCANPS_IXR_ARBLST_MASK:	Arbitration Lost Interrupt
-*
-*
-* @param	CallBackRef is the callback reference passed from the
-*		interrupt Handler, which in our case is a pointer to the
-*		driver instance.
-* @param	IntrMask is a bit mask indicating pending interrupts.
-*		Its value equals 'OR'ing one or more of the XCANPS_IXR_*_MASK
-*		value(s) mentioned above.
-*
-* @return	None.
-*
-* @note		This function is called by the driver within interrupt context.
-* 		This function should be changed to meet specific application
-*		needs.
-*
-******************************************************************************/
-static void EventHandler(void *CallBackRef, u32 IntrMask)
-{
-	XCanPs *CanPtr = (XCanPs *)CallBackRef;
-
-	if (IntrMask & XCANPS_IXR_BSOFF_MASK) {
-		/*
-		 * Entering Bus off status interrupt requires
-		 * the CAN device be reset and reconfigured.
-		 */
-		XCanPs_Reset(CanPtr);
-		Config(CanPtr);
-		return;
-	}
-
-	if(IntrMask & XCANPS_IXR_RXOFLW_MASK) {
-		/*
-		 * Code to handle RX FIFO Overflow Interrupt should be put here.
-		 */
-	}
-
-	if(IntrMask & XCANPS_IXR_RXUFLW_MASK) {
-		/*
-		 * Code to handle RX FIFO Underflow Interrupt
-		 * should be put here.
-		 */
-	}
-
-	if(IntrMask & XCANPS_IXR_TXBFLL_MASK) {
-		/*
-		 * Code to handle TX High Priority Buffer Full
-		 * Interrupt should be put here.
-		 */
-	}
-
-	if(IntrMask & XCANPS_IXR_TXFLL_MASK) {
-		/*
-		 * Code to handle TX FIFO Full Interrupt should be put here.
-		 */
-	}
-
-	if (IntrMask & XCANPS_IXR_WKUP_MASK) {
-		/*
-		 * Code to handle Wake up from sleep mode Interrupt
-		 * should be put here.
-		 */
-	}
-
-	if (IntrMask & XCANPS_IXR_SLP_MASK) {
-		/*
-		 * Code to handle Enter sleep mode Interrupt should be put here.
-		 */
-	}
-
-	if (IntrMask & XCANPS_IXR_ARBLST_MASK) {
-		/*
-		 * Code to handle Lost bus arbitration Interrupt
-		 * should be put here.
-		 */
-	}
-}
-
-
-/*****************************************************************************/
-/**
-*
-* This function sets up the interrupt system so interrupts can occur for the
-* CAN. This function is application-specific since the actual system may or
-* may not have an interrupt controller. The CAN could be directly connected
-* to a processor without an interrupt controller. The user should modify this
-* function to fit the application.
-*
-* @param	IntcInstancePtr is a pointer to the instance of the ScuGic.
-* @param	CanInstancePtr contains a pointer to the instance of the CAN
-*		which is going to be connected to the interrupt
-*		controller.
-* @param	CanIntrId is the interrupt Id and is typically
-*		XPAR_<CANPS_instance>_INTR value from xparameters.h.
-*
-* @return	XST_SUCCESS if successful, otherwise XST_FAILURE.
-*
-* @note		None.
-*
-****************************************************************************/
-static int SetupInterruptSystem(INTC *IntcInstancePtr,
-				XCanPs *CanInstancePtr,
-				u16 CanIntrId)
-{
+	u8 *FramePtr;
 	int Status;
-#ifdef XPAR_INTC_0_DEVICE_ID
-#ifndef TESTAPP_GEN
-	/* Initialize the interrupt controller and connect the ISRs */
-	Status = XIntc_Initialize(IntcInstancePtr, INTC_DEVICE_ID);
-	if (Status != XST_SUCCESS)
-	{
 
-		xil_printf("Failed init intc\r\n");
-		return XST_FAILURE;
+	/*
+	 * Wait until a frame is received.
+	 */
+	while (XCanPs_IsRxEmpty(InstancePtr) == TRUE);
+
+	/*
+	 * Receive a frame and verify its contents.
+	 */
+	Status = XCanPs_Recv(InstancePtr, RxFrame);
+	if (Status == XST_SUCCESS) {
+		u32 id = RxFrame[0] >> XCANPS_IDR_ID1_SHIFT;
+		u32 dlc = RxFrame[1] >> XCANPS_DLCR_DLC_SHIFT;
+		FramePtr = (u8 *)(&RxFrame[2]);
+		printf("<<<< Success receive frame <<<<\n");
+		printf("\t CAN ID:  %x \n", id);
+		printf("\t DLC:  %d \n", dlc);
+		printf("\t Data: ");
+		for (int i = 0; i < can_dlc_rx_; i++)
+		{
+			if (i != can_dlc_rx_ - 1)
+			{
+				printf("%x, ", *FramePtr++);
+			}
+			else
+			{
+				printf("%x\n", *FramePtr++);
+			}
+
+		}
+
 	}
-#endif
-	/*
-	 * Connect the driver interrupt handler
-	 */
-	Status = XIntc_Connect(IntcInstancePtr, CanIntrId,
-							(XInterruptHandler)XCanPs_IntrHandler, CanInstancePtr);
-	if (Status != XST_SUCCESS)
-	{
-
-		xil_printf("Failed connect intc\r\n");
-		return XST_FAILURE;
-	}
-#ifndef TESTAPP_GEN
-	/*
-	 * Start the interrupt controller such that interrupts are enabled for
-	 * all devices that cause interrupts.
-	 */
-	Status = XIntc_Start(IntcInstancePtr, XIN_REAL_MODE);
-	if (Status != XST_SUCCESS)
-	{
-		return XST_FAILURE;
-	}
-#endif
-
-	/*
-	 * Enable the interrupt for the CAN device.
-	 */
-	XIntc_Enable(IntcInstancePtr, CanIntrId);
-#ifndef TESTAPP_GEN
-	Xil_ExceptionInit();
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT,
-				(Xil_ExceptionHandler)XIntc_InterruptHandler,
-				(void *)IntcInstancePtr);
-#endif
-#else
-#ifndef TESTAPP_GEN
-	XScuGic_Config *IntcConfig; /* Instance of the interrupt controller */
-
-	Xil_ExceptionInit();
-
-	/*
-	 * Initialize the interrupt controller driver so that it is ready to
-	 * use.
-	 */
-	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
-	if (NULL == IntcConfig) {
-		return XST_FAILURE;
-	}
-
-	Status = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig,
-					IntcConfig->CpuBaseAddress);
-	if (Status != XST_SUCCESS) {
-		return XST_FAILURE;
-	}
-
-
-	/*
-	 * Connect the interrupt controller interrupt handler to the hardware
-	 * interrupt handling logic in the processor.
-	 */
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT,
-				(Xil_ExceptionHandler)XScuGic_InterruptHandler,
-				IntcInstancePtr);
-#endif
-
-	/*
-	 * Connect the device driver handler that will be called when an
-	 * interrupt for the device occurs, the handler defined above performs
-	 * the specific interrupt processing for the device.
-	 */
-	Status = XScuGic_Connect(IntcInstancePtr, CanIntrId,
-				(Xil_InterruptHandler)XCanPs_IntrHandler,
-				(void *)CanInstancePtr);
-	if (Status != XST_SUCCESS) {
-		return Status;
-	}
-
-	/*
-	 * Enable the interrupt for the CAN device.
-	 */
-	XScuGic_Enable(IntcInstancePtr, CanIntrId);
-#endif
-#ifndef TESTAPP_GEN
-	/*
-	 * Enable interrupts in the Processor.
-	 */
-	Xil_ExceptionEnable();
-#endif
-	return XST_SUCCESS;
+	return Status;
 }

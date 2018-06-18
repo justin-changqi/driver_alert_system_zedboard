@@ -1,0 +1,148 @@
+/*
+ * can.c
+ *
+ *  Created on: Jun 18, 2018
+ *      Author: justin
+ */
+
+#include "can.h"
+
+int CanInit()
+{
+	int Status;
+
+	u16 DeviceId = CAN_DEVICE_ID_0;
+	XCanPs *CanInstPtr = &Can_0;
+//	XCanPs *CanInstPtr = &Can;
+	XCanPs_Config *ConfigPtr;
+
+	/*
+	 * Initialize the Can device.
+	 */
+	ConfigPtr = XCanPs_LookupConfig(DeviceId);
+	if (CanInstPtr == NULL) {
+		return XST_FAILURE;
+	}
+	Status = XCanPs_CfgInitialize(CanInstPtr,
+					ConfigPtr,
+					ConfigPtr->BaseAddr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	/*
+	 * Run self-test on the device, which verifies basic sanity of the
+	 * device and the driver.
+	 */
+	Status = XCanPs_SelfTest(CanInstPtr);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_CONFIG);
+	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_CONFIG);
+
+	XCanPs_SetBaudRatePrescaler(CanInstPtr, TEST_BRPR_BAUD_PRESCALAR);
+	XCanPs_SetBitTiming(CanInstPtr, TEST_BTR_SYNCJUMPWIDTH,
+				TEST_BTR_SECOND_TIMESEGMENT,
+
+				TEST_BTR_FIRST_TIMESEGMENT);
+
+	XCanPs_EnterMode(CanInstPtr, XCANPS_MODE_NORMAL);
+	while(XCanPs_GetMode(CanInstPtr) != XCANPS_MODE_NORMAL);
+
+	return Status;
+}
+
+void sendData(u8 data)
+{
+	SendFrame(&Can_0);
+}
+
+static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame)
+{
+	u8 *FramePtr;
+	int Index;
+	int Status;
+
+	/*
+	 * Create correct values for Identifier and Data Length Code Register.
+	 */
+	TxFrame[0] = (u32)XCanPs_CreateIdValue((u32)can_id_, 0, 0, 0, 0);
+	TxFrame[1] = (u32)XCanPs_CreateDlcValue((u32)can_dlc_);
+
+	/*
+	 * Now fill in the data field with known values so we can verify them
+	 * on receive.
+	 */
+	FramePtr = (u8 *)(&TxFrame[2]);
+	for (Index = 0; Index < can_dlc_; Index++) {
+		*FramePtr++ = (u8)Index;
+	}
+	while (XCanPs_IsTxFifoFull(InstancePtr) == TRUE);
+	Status = XCanPs_Send(InstancePtr, TxFrame);
+	if (Status != XST_SUCCESS)
+	{
+		printf("Failed send frame\n");
+	}
+	else
+	{
+		printf(">>>> Success send frame >>>>\n");
+		printf("\t CAN ID:  %x \n", can_id_);
+		printf("\t DLC:  %d \n", can_dlc_);
+		printf("\t Data: ");
+		for (int i = 0; i < can_dlc_; i++)
+		{
+			if (i != can_dlc_ - 1)
+			{
+				printf("%x, ", i);
+			}
+			else
+			{
+				printf("%x\n", i);
+			}
+
+		}
+	}
+
+	return Status;
+}
+
+static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame)
+{
+	u8 *FramePtr;
+	int Status;
+
+	/*
+	 * Wait until a frame is received.
+	 */
+	while (XCanPs_IsRxEmpty(InstancePtr) == TRUE);
+
+	/*
+	 * Receive a frame and verify its contents.
+	 */
+	Status = XCanPs_Recv(InstancePtr, RxFrame);
+	if (Status == XST_SUCCESS) {
+		u32 id = RxFrame[0] >> XCANPS_IDR_ID1_SHIFT;
+		u32 dlc = RxFrame[1] >> XCANPS_DLCR_DLC_SHIFT;
+		FramePtr = (u8 *)(&RxFrame[2]);
+		printf("<<<< Success receive frame <<<<\n");
+		printf("\t CAN ID:  %x \n", id);
+		printf("\t DLC:  %d \n", dlc);
+		printf("\t Data: ");
+		for (int i = 0; i < can_dlc_; i++)
+		{
+			if (i != can_dlc_ - 1)
+			{
+				printf("%x, ", *FramePtr++);
+			}
+			else
+			{
+				printf("%x\n", *FramePtr++);
+			}
+
+		}
+
+	}
+	return Status;
+}
