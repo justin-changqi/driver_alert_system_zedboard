@@ -72,8 +72,8 @@ int I2CsendData(u8 data)
 	if (Status != XST_SUCCESS) {
 		return XST_FAILURE;
 	}
-	while (XIicPs_BusIsBusy(&Iic)) {
-		/* NOP */
-	}
+//	while (XIicPs_BusIsBusy(&Iic)) {
+//		/* NOP */
+//	}
 	return XST_SUCCESS;
 }

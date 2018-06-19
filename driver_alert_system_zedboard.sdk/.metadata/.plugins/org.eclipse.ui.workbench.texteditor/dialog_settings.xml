@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR" key="selection"/>
+		<item value="RESET_VALUE" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="0"/>
+			<item value="RESET_VALUE"/>
+			<item value="GPIO_SW"/>
+			<item value="GlobalIntrMask"/>
+			<item value="BUTTON_INTERRUPT"/>
 			<item value="xlconcat_0"/>
 			<item value="interrupts"/>
-			<item value="GlobalIntrMask"/>
 			<item value="IntrFlag"/>
-			<item value="GpioDisableIntr"/>
-			<item value="XPAR_FABRIC_AXI_GPIO_0_IP2INTC_IRPT_INTR"/>
-			<item value="FRAME_DATA_LENGTH"/>
-			<item value="CanPsIntrExample"/>
 		</list>
 		<list key="replacehistory">
 		</list>

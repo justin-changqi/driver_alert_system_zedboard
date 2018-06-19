@@ -1,0 +1,150 @@
+/*
+ * common.c
+ *
+ *  Created on: Jun 17, 2018
+ *      Author: justin
+ */
+
+#include "common.h"
+
+void initEvevents()
+{
+	ask_sensor_data_.duration = 100;
+	ask_sensor_data_.start_time = Timer_ms;
+	flash_event_.duration = 500;
+	flash_event_.start_time = Timer_ms;
+	sp_flag_ = 0x00;
+}
+
+void updateEvevents(struct Event *event)
+{
+	int current_time = Timer_ms;
+	if (current_time - event->start_time > event->duration) {
+		if (event == &ask_sensor_data_) {
+			DetectHandler();
+			event->start_time = current_time;
+		}
+		if (event == &flash_event_) {
+			LightHandler();
+			event->start_time = current_time;
+		}
+	}
+}
+
+void LightHandler()
+{
+	static int count = 0;
+	switch(getBtnValue()) {
+	case 0:
+		SetGpioOut(0, GPIO_LED_L);
+		SetGpioOut(0, GPIO_LED_R);
+		break;
+	case 1:
+		SetGpioOut(0, GPIO_LED_R);
+		SetGpioOut(count%2, GPIO_LED_L);
+		break;
+	case 2:
+		SetGpioOut(0, GPIO_LED_L);
+		SetGpioOut(count%2, GPIO_LED_R);
+		break;
+	default:
+		break;
+
+	}
+	count++;
+}
+
+void DetectHandler()
+{
+	btn_value = getBtnValue();
+	if(btn_value == 0)
+		return;
+	CANsendData(0x05);
+	CANgetData(can_bus_data_);
+	int len;
+	double output[6];
+	decodeData(can_bus_data_, &len, output);
+	u8 check_dir = CHECK_NONE;
+	switch(btn_value) {
+	case 1:
+		check_dir = CHECK_L;
+		break;
+	case 2:
+		check_dir = CHECK_R;
+		break;
+	default:
+		break;
+	}
+	HandleAlert(check_dir, output);
+}
+
+void decodeData(u8 *input, int *len, double *output)
+{
+	*len = (input[0] >> 4) & 0x0F;
+	int len_in_bits = 4+(*len)*10;
+	u8 *data_in_bits = malloc(len_in_bits * sizeof(u8));
+	int index = len_in_bits;
+	for (int i=0; i < len_in_bits/8; i++) {
+		for (int j=7; j>=0; j--) {
+			data_in_bits[--index] = (input[i] >> j) & 0x01;
+		}
+	}
+	index = len_in_bits-4;
+	for (int i=0; i<*len; i++) {
+		output[i] = 0x0000;
+		u16 a = 0x00;
+		for (int j=9; j>=0; j--) {
+			a = data_in_bits[--index];
+			output[i] += a << j;
+		}
+		// Turn sensor data to center meter
+		output[i] *= 0.05;
+	}
+}
+
+void HandleAlert(u8 status, double *data)
+{
+	static u8 i2c_data_previous=0x01;
+	static int sent_counnt = 0;
+	u8 i2c_data = 0x00;
+	switch(status) {
+	case CHECK_NONE:
+		i2c_data = 0x00;
+		return;
+		break;
+	case CHECK_L:
+		for (int i=0; i<3; i++) {
+			if (data[i] < DISTANCE_TH) {
+				i2c_data += 0x01 << i;
+			}
+		}
+		break;
+	case CHECK_R:
+		for (int i=3; i<6; i++) {
+			if (data[i] < DISTANCE_TH) {
+				i2c_data += 0x01 << i;
+			}
+		}
+		break;
+	default:
+		break;
+	}
+	if (i2c_data_previous == i2c_data) {
+		if (sent_counnt-- <= 0 ) {
+			I2CsendData(i2c_data);
+			sent_counnt = SEND_DELAY;
+		} else {
+			return;
+		}
+	} else {
+		I2CsendData(i2c_data);
+	}
+	i2c_data_previous = i2c_data;
+}
+
+void SpFlash() {
+	static int count;
+	if (sp_flag_) {
+
+	}
+}

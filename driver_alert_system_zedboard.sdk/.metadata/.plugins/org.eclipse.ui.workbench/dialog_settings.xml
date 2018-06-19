@@ -2,18 +2,23 @@
 <section name="Workbench">
 	<section name="WorkbenchPreferenceDialogSettings">
 		<item value="645" key="DIALOG_X_ORIGIN"/>
-		<item value="158" key="DIALOG_Y_ORIGIN"/>
+		<item value="40" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="-1" key="dialogHeight"/>
-		<item value="-1" key="dialogWidth"/>
+		<item value="184" key="dialogHeight"/>
+		<item value="284" key="dialogWidth"/>
 		<list key="textEntries">
+			<item value="2"/>
 		</list>
 		<list key="orderedElements">
+			<item value="com.xilinx.sdk.terminal.sdkterminal"/>
 		</list>
 		<list key="orderedProviders">
+			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textArray">
+			<item value="sdk"/>
+			<item value="sd"/>
 		</list>
 	</section>
 </section>

@@ -61,9 +61,9 @@ void CANsendData(u8 data)
 	SendFrame(&Can_0, TxFrame_0);
 }
 
-void CANgetData()
+void CANgetData(u8 *data)
 {
-	RecvFrame(&Can_0, RxFrame_0);
+	RecvFrame(&Can_0, RxFrame_0, data);
 }
 
 
@@ -95,6 +95,7 @@ static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame)
 	}
 	else
 	{
+#ifdef CAN_PRINT
 		printf(">>>> Success send frame >>>>\n");
 		printf("\t CAN ID:  %x \n", can_id_);
 		printf("\t DLC:  %d \n", can_dlc_tx_);
@@ -111,12 +112,13 @@ static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame)
 			}
 
 		}
+#endif
 	}
 
 	return Status;
 }
 
-static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame)
+static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame, u8 *data)
 {
 	u8 *FramePtr;
 	int Status;
@@ -134,21 +136,25 @@ static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame)
 		u32 id = RxFrame[0] >> XCANPS_IDR_ID1_SHIFT;
 		u32 dlc = RxFrame[1] >> XCANPS_DLCR_DLC_SHIFT;
 		FramePtr = (u8 *)(&RxFrame[2]);
+#ifdef CAN_PRINT
 		printf("<<<< Success receive frame <<<<\n");
 		printf("\t CAN ID:  %x \n", id);
 		printf("\t DLC:  %d \n", dlc);
 		printf("\t Data: ");
+#endif
 		for (int i = 0; i < can_dlc_rx_; i++)
 		{
+			data[i] = *(FramePtr++);
+#ifdef CAN_PRINT
 			if (i != can_dlc_rx_ - 1)
 			{
-				printf("%x, ", *FramePtr++);
+				printf("%x, ", data[i]);
 			}
 			else
 			{
-				printf("%x\n", *FramePtr++);
+				printf("%x\n", data[i]);
 			}
-
+#endif
 		}
 
 	}

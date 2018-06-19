@@ -34,9 +34,9 @@
 //CAN Functions
 int CanInit();
 void CANsendData(u8 data);
-void CANgetData();
+void CANgetData(u8 *data);
 static int SendFrame(XCanPs *InstancePtr, u32 *TxFrame);
-static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame);
+static int RecvFrame(XCanPs *InstancePtr, u32 *RxFrame, u8 *data);
 
 //Buffer
 static u32 TxFrame_0[XCANPS_MAX_FRAME_SIZE_IN_WORDS];
