@@ -12,7 +12,7 @@
 #include "xparameters.h"
 #include "xil_types.h"
 
-#define PRINT_SENSOR_
+#define PRINT_SENSOR
 
 #define GPIO_LED_L				0x02
 #define GPIO_LED_R				0x01

@@ -65,6 +65,13 @@ void DetectHandler()
 	int len;
 	double output[6];
 	decodeData(can_bus_data_, &len, output);
+#ifdef PRINT_SENSOR
+	printf("sensors: \r\n");
+	for (int i=0; i<6; i++) {
+		printf("%f ", output[i]);
+	}
+	printf("\r\n");
+#endif
 	u8 check_dir = CHECK_NONE;
 	switch(btn_value) {
 	case 1:
@@ -99,7 +106,7 @@ void decodeData(u8 *input, int *len, double *output)
 			output[i] += a << j;
 		}
 		// Turn sensor data to center meter
-		output[i] *= 0.05;
+		output[i] *= 0.5;
 	}
 }
 
@@ -130,6 +137,7 @@ void HandleAlert(u8 status, double *data)
 	default:
 		break;
 	}
+	if (i2c_data == 0x00) return;
 	if (i2c_data_previous == i2c_data) {
 		if (sent_counnt-- <= 0 ) {
 			I2CsendData(i2c_data);

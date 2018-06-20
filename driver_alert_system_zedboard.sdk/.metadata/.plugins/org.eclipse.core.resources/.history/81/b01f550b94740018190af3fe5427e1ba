@@ -12,13 +12,11 @@
 #include "xparameters.h"
 #include "xil_types.h"
 
-#define PRINT_SENSOR_
-
 #define GPIO_LED_L				0x02
 #define GPIO_LED_R				0x01
 #define GPIO_SP					0x04
 
-#define DISTANCE_TH 			40		// cm
+#define DISTANCE_TH 			50		// cm
 
 #define CHECK_NONE				0x0
 #define CHECK_L					0x1

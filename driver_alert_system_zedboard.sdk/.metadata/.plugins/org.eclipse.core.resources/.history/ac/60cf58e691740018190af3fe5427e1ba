@@ -20,7 +20,7 @@
 //CAN Include
 #include "xcanps.h"
 
-#define CAN_PRINT_
+#define CAN_PRINT
 
 //parameters for CAN BUS
 #define TEST_BTR_SYNCJUMPWIDTH	3
